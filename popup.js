@@ -29,14 +29,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Initialization ---
 
-  // Check if running in sidebar to hide dock button
-  if (window.location.pathname.includes('sidebar.html')) {
-    if (btnDock) btnDock.style.display = 'none';
-    document.body.style.width = '100%'; // Ensure full width in iframe
+  // Detect context
+  const isSidebar = window.location.pathname.includes('sidebar.html');
+
+  if (isSidebar) {
+    // In Sidebar mode:
+    // 1. Change Dock button to Close/Undock icon
+    if (btnDock) {
+      btnDock.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>';
+      btnDock.title = "Close Sidebar";
+      // Add a slight background to make it stand out
+      btnDock.style.background = '#fee2e2';
+      btnDock.style.color = '#ef4444';
+      btnDock.style.borderColor = '#fecaca';
+    }
+    // 2. Ensure body fits iframe
+    document.body.style.width = '100%';
+    document.body.style.height = '100vh';
   }
 
-  // Load saved data from storage
-  chrome.storage.local.get(['scrapedData', 'lastView'], (result) => {
+  // Load saved data
+  chrome.storage.local.get(['scrapedData'], (result) => {
     if (result.scrapedData && result.scrapedData.length > 0) {
       scrapedData = result.scrapedData;
       updateCount(scrapedData.length);
@@ -62,17 +75,38 @@ document.addEventListener('DOMContentLoaded', () => {
     item.querySelector('.faq-question').addEventListener('click', () => {
       item.classList.toggle('open');
       const span = item.querySelector('span');
-      span.textContent = item.classList.contains('open') ? '-' : '+';
+      if (span) span.textContent = item.classList.contains('open') ? '-' : '+';
     });
   });
 
-  // --- Dock / Sidebar Toggle ---
+  // --- Dock / Sidebar Toggle Logic ---
   if (btnDock) {
     btnDock.addEventListener('click', async () => {
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (tab) {
-        chrome.tabs.sendMessage(tab.id, { action: "TOGGLE_SIDEBAR" });
-        window.close(); // Close popup
+      try {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+        if (!tab) {
+          console.error("No active tab found");
+          return;
+        }
+
+        // Send toggle message
+        chrome.tabs.sendMessage(tab.id, { action: "TOGGLE_SIDEBAR" }, (response) => {
+          // Handle connection errors (e.g., content script not ready)
+          if (chrome.runtime.lastError) {
+            console.warn("Connection error:", chrome.runtime.lastError.message);
+            if (statusText) statusText.textContent = "Please refresh WhatsApp Web first.";
+            return;
+          }
+
+          // If we are in Popup mode, close the popup after toggling
+          if (!isSidebar) {
+            window.close();
+          }
+        });
+
+      } catch (err) {
+        console.error("Dock error:", err);
       }
     });
   }
@@ -89,6 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Core Logic ---
 
   function showView(viewId) {
+    if (!viewError || !viewReady || !viewSuccess) return;
+
     viewError.classList.add('hidden');
     viewReady.classList.add('hidden');
     viewSuccess.classList.add('hidden');
@@ -97,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function checkWhatsAppTab() {
     // If we already have data shown, don't override
-    if (!viewSuccess.classList.contains('hidden')) return;
+    if (viewSuccess && !viewSuccess.classList.contains('hidden')) return;
 
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tab && tab.url && tab.url.includes("web.whatsapp.com")) {
@@ -108,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateCount(target) {
+    if (!contactCount) return;
     let current = 0;
     const increment = Math.ceil(target / 30);
     const timer = setInterval(() => {

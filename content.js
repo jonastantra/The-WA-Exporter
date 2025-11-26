@@ -107,6 +107,7 @@
 
   // --- Sidebar Logic ---
   function toggleSidebar() {
+    console.log("Toggling Sidebar...");
     let container = document.getElementById('wa-exporter-sidebar-container');
 
     if (!container) {
@@ -119,13 +120,13 @@
       container.style.top = '0';
       container.style.right = '0';
       container.style.height = '100vh';
-      container.style.width = '360px';
+      container.style.width = '400px'; // Match popup width
       container.style.border = 'none';
       container.style.zIndex = '99999';
       container.style.boxShadow = '-5px 0 15px rgba(0,0,0,0.1)';
       container.style.transition = 'transform 0.3s ease-in-out';
       container.style.transform = 'translateX(100%)'; // Hidden initially
-      container.style.background = '#f3f4f6';
+      container.style.background = '#f8fafc';
 
       document.body.appendChild(container);
 
@@ -136,16 +137,16 @@
     const isOpen = container.style.transform === 'translateX(0px)';
 
     if (isOpen) {
-      container.style.transform = 'translateX(100%)';
+      container.style.transform = 'translateX(100%)'; // Close
     } else {
-      container.style.transform = 'translateX(0px)';
+      container.style.transform = 'translateX(0px)'; // Open
     }
 
     // Adjust WhatsApp Main Container
     const app = document.getElementById('app') || document.querySelector('#app') || document.body.firstElementChild;
     if (app) {
       if (!isOpen) {
-        app.style.width = 'calc(100% - 360px)';
+        app.style.width = 'calc(100% - 400px)'; // Match sidebar width
         app.style.transition = 'width 0.3s ease';
       } else {
         app.style.width = '100%';
@@ -155,17 +156,19 @@
 
   // Message Listener
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    // Return true to indicate we will send a response asynchronously
+
     if (request.action === "SCRAPE") {
       scrollAndScrape()
         .then(data => sendResponse({ success: true, data: data }))
         .catch(err => sendResponse({ success: false, error: err.message }));
-
-      return true; // Keep channel open
+      return true;
     }
 
     if (request.action === "TOGGLE_SIDEBAR") {
       toggleSidebar();
       sendResponse({ success: true });
+      return false; // Synchronous response is fine here
     }
   });
 })();
