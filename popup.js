@@ -33,17 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const isSidebar = window.location.pathname.includes('sidebar.html');
 
   if (isSidebar) {
-    // In Sidebar mode:
-    // 1. Change Dock button to Close/Undock icon
     if (btnDock) {
       btnDock.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>';
       btnDock.title = "Close Sidebar";
-      // Add a slight background to make it stand out
       btnDock.style.background = '#fee2e2';
       btnDock.style.color = '#ef4444';
       btnDock.style.borderColor = '#fecaca';
     }
-    // 2. Ensure body fits iframe
     document.body.style.width = '100%';
     document.body.style.height = '100vh';
   }
@@ -58,6 +54,79 @@ document.addEventListener('DOMContentLoaded', () => {
       checkWhatsAppTab();
     }
   });
+
+  // --- Helper: Inject Script if Missing ---
+  async function ensureContentScript(tabId) {
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId: tabId },
+        files: ['content.js']
+      });
+      await chrome.scripting.insertCSS({
+        target: { tabId: tabId },
+        files: ['content.css']
+      });
+      console.log("Scripts injected successfully");
+      return true;
+    } catch (err) {
+      console.error("Failed to inject scripts:", err);
+      return false;
+    }
+  }
+
+  // --- Helper: Send Message with Retry ---
+  async function sendMessageToContent(message) {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab) return { success: false, error: "No active tab" };
+
+    return new Promise((resolve) => {
+      chrome.tabs.sendMessage(tab.id, message, async (response) => {
+        if (chrome.runtime.lastError) {
+          console.warn("Connection failed, attempting injection...", chrome.runtime.lastError.message);
+
+          // Attempt to inject script
+          const injected = await ensureContentScript(tab.id);
+          if (injected) {
+            // Retry message after small delay
+            setTimeout(() => {
+              chrome.tabs.sendMessage(tab.id, message, (retryResponse) => {
+                if (chrome.runtime.lastError) {
+                  resolve({ success: false, error: "Please refresh the page" });
+                } else {
+                  resolve(retryResponse || { success: true });
+                }
+              });
+            }, 100);
+          } else {
+            resolve({ success: false, error: "Injection failed" });
+          }
+        } else {
+          resolve(response || { success: true });
+        }
+      });
+    });
+  }
+
+  // --- Dock / Sidebar Toggle Logic ---
+  if (btnDock) {
+    btnDock.addEventListener('click', async () => {
+      const response = await sendMessageToContent({ action: "TOGGLE_SIDEBAR" });
+
+      if (!response.success && response.error) {
+        if (statusText) statusText.textContent = response.error;
+        // If injection failed, we might need to reload
+        if (response.error.includes("refresh")) {
+          chrome.tabs.reload();
+          window.close();
+        }
+        return;
+      }
+
+      if (!isSidebar) {
+        window.close();
+      }
+    });
+  }
 
   // --- Navigation ---
   navItems.forEach(item => {
@@ -79,38 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // --- Dock / Sidebar Toggle Logic ---
-  if (btnDock) {
-    btnDock.addEventListener('click', async () => {
-      try {
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-        if (!tab) {
-          console.error("No active tab found");
-          return;
-        }
-
-        // Send toggle message
-        chrome.tabs.sendMessage(tab.id, { action: "TOGGLE_SIDEBAR" }, (response) => {
-          // Handle connection errors (e.g., content script not ready)
-          if (chrome.runtime.lastError) {
-            console.warn("Connection error:", chrome.runtime.lastError.message);
-            if (statusText) statusText.textContent = "Please refresh WhatsApp Web first.";
-            return;
-          }
-
-          // If we are in Popup mode, close the popup after toggling
-          if (!isSidebar) {
-            window.close();
-          }
-        });
-
-      } catch (err) {
-        console.error("Dock error:", err);
-      }
-    });
-  }
-
   // --- Format Selection ---
   formatOptions.forEach(opt => {
     opt.addEventListener('click', () => {
@@ -124,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showView(viewId) {
     if (!viewError || !viewReady || !viewSuccess) return;
-
     viewError.classList.add('hidden');
     viewReady.classList.add('hidden');
     viewSuccess.classList.add('hidden');
@@ -132,9 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function checkWhatsAppTab() {
-    // If we already have data shown, don't override
     if (viewSuccess && !viewSuccess.classList.contains('hidden')) return;
-
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tab && tab.url && tab.url.includes("web.whatsapp.com")) {
       showView('view-ready');
@@ -169,28 +203,18 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnScrape) {
     btnScrape.addEventListener('click', async () => {
       statusText.textContent = "Initializing scanner...";
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-      if (!tab) return;
+      const response = await sendMessageToContent({ action: "SCRAPE" });
 
-      chrome.tabs.sendMessage(tab.id, { action: "SCRAPE" }, (response) => {
-        if (chrome.runtime.lastError) {
-          statusText.textContent = "Connection error. Please refresh WhatsApp.";
-          return;
-        }
-
-        if (response && response.success) {
-          scrapedData = response.data;
-          // Save to storage
-          chrome.storage.local.set({ scrapedData: scrapedData });
-
-          showView('view-success');
-          updateCount(scrapedData.length);
-          statusText.textContent = "";
-        } else {
-          statusText.textContent = "Error: " + (response ? response.error : "Unknown");
-        }
-      });
+      if (response && response.success) {
+        scrapedData = response.data;
+        chrome.storage.local.set({ scrapedData: scrapedData });
+        showView('view-success');
+        updateCount(scrapedData.length);
+        statusText.textContent = "";
+      } else {
+        statusText.textContent = "Error: " + (response ? response.error : "Connection failed. Try refreshing.");
+      }
     });
   }
 
