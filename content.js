@@ -21,14 +21,14 @@
     // Priority 3: Look for any div with role="grid"/treegrid that is scrollable
     const grids = document.querySelectorAll('div[role="grid"], div[role="treegrid"]');
     for (let grid of grids) {
-        // Check if it has a vertical scrollbar capability
-        const style = window.getComputedStyle(grid);
-        if (style.overflowY === 'auto' || style.overflowY === 'scroll' || style.overflowY === 'overlay') {
-            console.log("Contenedor encontrado por role y overflow");
-            return grid;
-        }
+      // Check if it has a vertical scrollbar capability
+      const style = window.getComputedStyle(grid);
+      if (style.overflowY === 'auto' || style.overflowY === 'scroll' || style.overflowY === 'overlay') {
+        console.log("Contenedor encontrado por role y overflow");
+        return grid;
+      }
     }
-    
+
     console.error("No se encontró el contenedor de la lista de chats.");
     return null;
   }
@@ -38,12 +38,12 @@
     try {
       // Attempt to get all text content broken by newlines
       const rawText = row.innerText.split('\n').filter(t => t.trim().length > 0);
-      
+
       if (rawText.length === 0) return null;
 
       let name = rawText[0]; // Default assumption: first line is name
       let lastMessage = "";
-      let time = "";
+      let phone = "";
 
       // Heuristics to improve name detection
       // 1. Look for specific elements with title attributes (common in WA)
@@ -52,19 +52,27 @@
         name = titleEl.getAttribute('title');
       }
 
+      // Check if name looks like a phone number
+      // Matches: +123456789, +1 234 567 890, (123) 456-7890, etc.
+      const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{2,}[-\s\.]?[0-9]{2,}$/;
+      if (phoneRegex.test(name.replace(/\s/g, ''))) {
+        phone = name;
+      }
+
       // 2. Identify last message
       // Usually the last message is the second substantial line of text
       // Exclude timestamps (e.g. "12:30", "Ayer", "Martes")
       const timeRegex = /^(?:\d{1,2}:\d{2}|Ayer|Yesterday|Hoy|Today|Domingo|Lunes|Martes|Miércoles|Jueves|Viernes|Sábado|Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)$/i;
-      
+
       // Find a line that doesn't look like the name and doesn't look like a time
       const messageCandidate = rawText.find(line => line !== name && !timeRegex.test(line));
       if (messageCandidate) {
         lastMessage = messageCandidate;
       }
 
-      return { 
-        name: name.trim(), 
+      return {
+        name: name.trim(),
+        phone: phone.trim(),
         lastMessage: lastMessage.substring(0, 100).trim() // Limit length
       };
 
@@ -91,10 +99,10 @@
     let previousHeight = 0;
     let noChangeCount = 0;
     // Increase patience for "no change" since network can be slow
-    const MAX_NO_CHANGE = 5; 
-    
+    const MAX_NO_CHANGE = 5;
+
     // Limit maximum scroll cycles to prevent infinite loops (e.g., 2000 contacts approx)
-    const MAX_CYCLES = 300; 
+    const MAX_CYCLES = 300;
 
     console.log("Iniciando auto-scroll y scraping...");
 
@@ -103,7 +111,7 @@
       // WA Web uses div[role="row"] or specific classes depending on version.
       // We use a broad selector to be safe.
       const rows = chatList.querySelectorAll('div[role="row"]');
-      
+
       if (rows.length === 0) {
         // Fallback for potential layout changes
         console.warn("No se encontraron filas con role='row'. Buscando hijos directos...");
@@ -125,7 +133,7 @@
 
       // 2. Scroll logic
       // Scroll by the height of the visible area (minus a small overlap)
-      const scrollStep = Math.floor(chatList.clientHeight * 0.8); 
+      const scrollStep = Math.floor(chatList.clientHeight * 0.8);
       previousHeight = chatList.scrollTop;
       chatList.scrollTop += scrollStep;
 
@@ -145,7 +153,7 @@
       } else {
         noChangeCount = 0;
         // Visual feedback in console
-        console.log(`Scroll paso ${i+1}: ${contacts.size} contactos recolectados hasta ahora...`);
+        console.log(`Scroll paso ${i + 1}: ${contacts.size} contactos recolectados hasta ahora...`);
       }
     }
 
@@ -158,7 +166,7 @@
       scrollAndScrape()
         .then(data => sendResponse({ success: true, data: data }))
         .catch(err => sendResponse({ success: false, error: err.message }));
-      
+
       return true; // Keep channel open
     }
   });
