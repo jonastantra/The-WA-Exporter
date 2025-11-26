@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WA Contact Exporter</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      width: 350px;
+      padding: 15px;
+      background-color: #f8f9fa;
+    }
+    .status-box {
+      font-size: 0.9rem;
+      max-height: 100px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid p-0">
+    <h5 class="mb-3 text-success fw-bold">WhatsApp Exporter</h5>
+    
+    <div class="mb-3">
+      <label for="formatSelect" class="form-label">Formato de Exportación</label>
+      <select class="form-select" id="formatSelect">
+        <option value="csv">CSV (Excel compatible)</option>
+        <option value="xlsx">Excel (.xlsx)</option>
+        <option value="txt">TXT</option>
+      </select>
+    </div>
+
+    <div class="d-grid gap-2">
+      <button id="btnScrape" class="btn btn-success">
+        Extraer Contactos
+      </button>
+    </div>
+
+    <div id="statusArea" class="mt-3 p-2 border rounded bg-white status-box d-none">
+      <p class="m-0 text-muted" id="statusText">Listo para iniciar...</p>
+    </div>
+
+    <!-- SheetJS for Excel export (injected via content script usually, but we can load it here if processing happens in popup, 
+         but since scraping is in content script, we might just pass data back to popup for formatting/download) -->
+    <script src="popup.js"></script>
+  </div>
+</body>
+</html>
