@@ -1,11 +1,11 @@
-// background.js - Service Worker para WA Exporter
+// background.js - Service Worker para Snatch Exporter
 // Versión simplificada y corregida
 
-console.log("WA Exporter: Service Worker iniciado");
+console.log("Snatch Exporter: Service Worker iniciado");
 
 // Inicialización al instalar la extensión
 chrome.runtime.onInstalled.addListener(() => {
-    console.log("WA Exporter: Extensión instalada");
+    console.log("Snatch Exporter: Extensión instalada");
     
     // Inicializar storage con valores por defecto
     chrome.storage.local.get(['scrapedData'], (data) => {
@@ -28,11 +28,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             target: { tabId: tabId },
             files: ['content.js']
         }).then(() => {
-            console.log('WA Exporter: Content script inyectado en tab', tabId);
+            console.log('Snatch Exporter: Content script inyectado en tab', tabId);
         }).catch(err => {
             // Ignorar si ya está inyectado
             if (!err.message.includes('already')) {
-                console.log('WA Exporter: Script ya inyectado o error:', err.message);
+                console.log('Snatch Exporter: Script ya inyectado o error:', err.message);
             }
         });
     }
@@ -69,5 +69,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // Log cuando el service worker se suspende
 chrome.runtime.onSuspend.addListener(() => {
-    console.log('WA Exporter: Service worker suspendido, datos guardados en storage');
+    console.log('Snatch Exporter: Service worker suspendido, datos guardados en storage');
 });

@@ -25,8 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formatOptions = document.querySelectorAll('.format-option');
     const progressInfo = document.getElementById('progressInfo');
 
-    // FAQ
-    const faqItems = document.querySelectorAll('.faq-item');
+    // FAQ - Usando elemento nativo <details>, no necesita JS
 
     // State
     let scrapedData = [];
@@ -158,17 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- FAQ Logic ---
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        if (question) {
-            question.addEventListener('click', () => {
-                item.classList.toggle('open');
-                const span = item.querySelector('span');
-                if (span) span.textContent = item.classList.contains('open') ? '-' : '+';
-            });
-        }
-    });
+    // FAQ usa elemento nativo <details> - no requiere JavaScript
 
     // --- Format Selection ---
     formatOptions.forEach(opt => {

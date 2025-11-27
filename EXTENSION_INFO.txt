@@ -1,0 +1,163 @@
+================================================================================
+                    SNATCH WHATSAPP EXPORTER - INFORMACIÓN COMPLETA
+================================================================================
+
+NOMBRE DE LA EXTENSIÓN:
+Snatch WhatsApp Exporter
+
+VERSIÓN ACTUAL: 1.3
+
+CATEGORÍA: Productividad / Utilidades
+
+PLATAFORMA: Google Chrome (Manifest V3)
+
+================================================================================
+                              ¿QUÉ HACE ESTA EXTENSIÓN?
+================================================================================
+
+Snatch WhatsApp Exporter es una extensión de Chrome que permite extraer y 
+exportar todos los contactos de WhatsApp Web de forma automática, rápida y 
+segura. 
+
+La extensión escanea automáticamente la lista de chats haciendo scroll 
+automático y extrae la información de cada contacto sin necesidad de 
+intervención manual del usuario.
+
+================================================================================
+                           CARACTERÍSTICAS PRINCIPALES
+================================================================================
+
+1. EXTRACCIÓN AUTOMÁTICA
+   - Scroll automático por toda la lista de chats
+   - Detección inteligente de contactos
+   - Extrae nombres, números de teléfono y último mensaje
+   - Funciona en múltiples idiomas (español, inglés, francés, alemán, etc.)
+
+2. MÚLTIPLES FORMATOS DE EXPORTACIÓN
+   - CSV (compatible con Excel, Google Sheets)
+   - Excel (.xls)
+   - JSON (para desarrolladores)
+   - VCard (.vcf) - Importable directamente en iPhone/Android
+
+3. SEGURIDAD Y PRIVACIDAD
+   - 100% local - NO envía datos a ningún servidor externo
+   - Todo el procesamiento ocurre en el navegador del usuario
+   - No requiere cuenta ni registro
+   - No almacena datos en la nube
+
+4. FUNCIONES AVANZADAS
+   - Pausar y reanudar la extracción en cualquier momento
+   - Guardado automático del progreso
+   - Reanudación automática si la página se recarga
+   - Detección automática de WhatsApp Web
+   - Eliminación de duplicados
+
+5. INTERFAZ DE USUARIO
+   - Diseño moderno y minimalista
+   - Interfaz en español
+   - Contador de contactos en tiempo real
+   - Indicador de progreso
+   - Sección de ayuda con preguntas frecuentes
+
+================================================================================
+                              DATOS QUE EXTRAE
+================================================================================
+
+Por cada contacto/chat, la extensión extrae:
+- Nombre del contacto o grupo
+- Número de teléfono (si está visible)
+- Último mensaje del chat
+- Marca de tiempo
+
+================================================================================
+                              CASOS DE USO
+================================================================================
+
+1. RESPALDO DE CONTACTOS
+   - Hacer backup de todos los contactos de WhatsApp
+   - Migrar contactos a otro dispositivo
+
+2. GESTIÓN DE NEGOCIOS
+   - Exportar lista de clientes de WhatsApp Business
+   - Crear bases de datos de contactos para CRM
+   - Organizar contactos de leads y prospectos
+
+3. MIGRACIÓN DE DISPOSITIVOS
+   - Exportar a VCard para importar en iPhone o Android
+   - Transferir contactos entre cuentas
+
+4. ANÁLISIS Y ORGANIZACIÓN
+   - Organizar contactos en hojas de cálculo
+   - Filtrar y categorizar contactos
+   - Crear listas de distribución
+
+================================================================================
+                              PERMISOS REQUERIDOS
+================================================================================
+
+- activeTab: Para interactuar con la pestaña activa de WhatsApp Web
+- scripting: Para ejecutar el script de extracción
+- downloads: Para descargar los archivos exportados
+- storage: Para guardar el progreso y datos temporalmente
+
+Host permissions:
+- https://web.whatsapp.com/* (solo funciona en WhatsApp Web)
+
+================================================================================
+                           COMPATIBILIDAD
+================================================================================
+
+- Navegador: Google Chrome (versión 88+)
+- Plataforma: Windows, macOS, Linux
+- Requiere: WhatsApp Web abierto y sesión iniciada
+- Manifest Version: 3 (última versión)
+
+================================================================================
+                      DIFERENCIADORES / PUNTOS DE VENTA
+================================================================================
+
+✓ Sin límites de contactos - extrae TODOS los contactos
+✓ Exportación a VCard - único formato compatible con iPhone
+✓ 100% privado - sin servidores externos
+✓ Guardado automático - nunca pierde progreso
+✓ Multi-idioma - funciona con WhatsApp en cualquier idioma
+✓ Interfaz intuitiva - fácil de usar
+✓ Actualizado 2024-2025 - compatible con la última versión de WhatsApp Web
+
+================================================================================
+                         PALABRAS CLAVE SUGERIDAS
+================================================================================
+
+whatsapp, export, contacts, exporter, backup, csv, excel, vcard, vcf, 
+contactos, exportar, respaldo, extractor, whatsapp web, phone numbers,
+business, leads, crm, migration, iphone, android
+
+================================================================================
+                              IDIOMA
+================================================================================
+
+La interfaz de la extensión está en ESPAÑOL.
+Soporta extracción de WhatsApp Web en múltiples idiomas.
+
+================================================================================
+                    INFORMACIÓN TÉCNICA ADICIONAL
+================================================================================
+
+Archivos principales:
+- manifest.json - Configuración de la extensión
+- popup.html/js/css - Interfaz del popup
+- sidepanel.html/js - Panel lateral alternativo
+- background.js - Service worker
+- content.js - Script que interactúa con WhatsApp Web
+- content.css - Estilos inyectados
+
+Tecnologías utilizadas:
+- JavaScript ES6+
+- Chrome Extension APIs (Manifest V3)
+- HTML5 / CSS3
+- Chrome Storage API
+- Chrome Downloads API
+
+================================================================================
+
+

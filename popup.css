@@ -408,45 +408,73 @@ p {
     box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
 }
 
-/* FAQ */
-.faq-item {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    overflow: hidden;
-    text-align: left;
-}
-
-.faq-question {
-    padding: 16px;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* FAQ Section - Using native details element */
+.help-title {
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 16px;
     color: var(--text-main);
 }
 
-.faq-question span {
+.faq-details {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.faq-details summary {
+    padding: 12px 14px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text-main);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-details summary::after {
+    content: '+';
     color: var(--primary-color);
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
 }
 
-.faq-answer {
-    padding: 0 16px 16px;
-    font-size: 13px;
+.faq-details[open] summary::after {
+    content: '−';
+}
+
+.faq-details[open] summary {
+    border-bottom: 1px solid #f1f5f9;
+    background: #fafafa;
+}
+
+.faq-details p {
+    padding: 12px 14px;
+    margin: 0;
+    font-size: 12px;
     color: var(--text-light);
-    display: none;
     line-height: 1.5;
-    border-top: 1px solid #f1f5f9;
-    padding-top: 12px;
+    background: white;
 }
 
-.faq-item.open .faq-answer {
-    display: block;
+/* Tip Box */
+.tip-box {
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 16px;
+    font-size: 12px;
+    color: #92400e;
+    line-height: 1.4;
 }
 
 /* Progress Info */

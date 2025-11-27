@@ -2,7 +2,7 @@
 // Versión 2.2 - Selectores actualizados y robustos (Nov 2025)
 // Ejecuta en el contexto de WhatsApp Web
 
-console.log('WA Exporter: Content Script cargado v2.2');
+console.log('Snatch Exporter: Content Script cargado v2.2');
 
 let isScanning = false;
 let scanIntervalId = null;
@@ -10,7 +10,7 @@ let debugMode = true; // Activar para ver logs detallados
 
 // Escucha de mensajes desde popup/sidepanel
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log('WA Exporter: Mensaje recibido:', request.action);
+    console.log('Snatch Exporter: Mensaje recibido:', request.action);
     
     switch(request.action) {
         case 'PING':
@@ -55,7 +55,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             break;
             
         default:
-            console.warn('WA Exporter: Acción desconocida:', request.action);
+            console.warn('Snatch Exporter: Acción desconocida:', request.action);
             sendResponse({ status: 'unknown_action' });
     }
     
@@ -67,27 +67,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     try {
         const storage = await chrome.storage.local.get(['isScanning', 'lastScrollPosition']);
         if (storage.isScanning) {
-            console.log('WA Exporter: Intentando auto-reanudar...');
+            console.log('Snatch Exporter: Intentando auto-reanudar...');
             let attempts = 0;
             const waitForWA = setInterval(() => {
                 attempts++;
                 const chatList = document.querySelector('#pane-side');
                 if (chatList) {
                     clearInterval(waitForWA);
-                    console.log('WA Exporter: WhatsApp cargado, reanudando...');
+                    console.log('Snatch Exporter: WhatsApp cargado, reanudando...');
                     if (storage.lastScrollPosition) {
                         chatList.scrollTop = storage.lastScrollPosition;
                     }
                     setTimeout(() => startExtraction(), 1500);
                 } else if (attempts > 30) {
                     clearInterval(waitForWA);
-                    console.log('WA Exporter: Tiempo de espera agotado para auto-resume');
+                    console.log('Snatch Exporter: Tiempo de espera agotado para auto-resume');
                     chrome.storage.local.set({ isScanning: false });
                 }
             }, 1000);
         }
     } catch (e) {
-        console.error('WA Exporter: Error en auto-resume:', e);
+        console.error('Snatch Exporter: Error en auto-resume:', e);
     }
 })();
 
@@ -128,7 +128,7 @@ function findChatContainer() {
         'div._aigv', // Clase interna de WhatsApp (puede cambiar)
     ];
 
-    if (debugMode) console.log('WA Exporter: Buscando contenedor de chats...');
+    if (debugMode) console.log('Snatch Exporter: Buscando contenedor de chats...');
 
     for (const selector of selectors) {
         try {
@@ -136,7 +136,7 @@ function findChatContainer() {
             if (element) {
                 // Verificar que es scrollable (tiene contenido más alto que su viewport)
                 if (element.scrollHeight > element.clientHeight + 50) {
-                    if (debugMode) console.log('WA Exporter: ✅ Contenedor scrollable encontrado:', selector);
+                    if (debugMode) console.log('Snatch Exporter: ✅ Contenedor scrollable encontrado:', selector);
                     return element;
                 }
                 
@@ -152,17 +152,17 @@ function findChatContainer() {
                 for (const childSel of scrollableSelectors) {
                     const scrollableChild = element.querySelector(childSel);
                     if (scrollableChild && scrollableChild.scrollHeight > scrollableChild.clientHeight + 50) {
-                        if (debugMode) console.log('WA Exporter: ✅ Contenedor hijo scrollable encontrado via:', selector, '->', childSel);
+                        if (debugMode) console.log('Snatch Exporter: ✅ Contenedor hijo scrollable encontrado via:', selector, '->', childSel);
                         return scrollableChild;
                     }
                 }
                 
                 // Si encontramos el elemento pero no es scrollable, puede que la lista esté vacía
                 // o que WhatsApp aún está cargando
-                if (debugMode) console.log('WA Exporter: ⚠️ Elemento encontrado pero no scrollable:', selector);
+                if (debugMode) console.log('Snatch Exporter: ⚠️ Elemento encontrado pero no scrollable:', selector);
             }
         } catch (e) {
-            if (debugMode) console.warn('WA Exporter: Error con selector', selector, e.message);
+            if (debugMode) console.warn('Snatch Exporter: Error con selector', selector, e.message);
         }
     }
 
@@ -174,21 +174,21 @@ function findChatContainer() {
             if (div.scrollHeight > 500 && div.scrollHeight > div.clientHeight + 100) {
                 const hasClickableChildren = div.querySelector('[role="button"], [role="listitem"], [role="row"]');
                 if (hasClickableChildren) {
-                    if (debugMode) console.log('WA Exporter: ✅ Contenedor encontrado por búsqueda heurística');
+                    if (debugMode) console.log('Snatch Exporter: ✅ Contenedor encontrado por búsqueda heurística');
                     return div;
                 }
             }
         }
     }
 
-    console.error('WA Exporter: ❌ No se pudo encontrar el contenedor de chats');
-    console.error('WA Exporter: Verifica que estés en la pantalla principal de WhatsApp Web');
+    console.error('Snatch Exporter: ❌ No se pudo encontrar el contenedor de chats');
+    console.error('Snatch Exporter: Verifica que estés en la pantalla principal de WhatsApp Web');
     return null;
 }
 
 // Lógica principal de extracción
 async function startExtraction() {
-    console.log('WA Exporter: Iniciando extracción...');
+    console.log('Snatch Exporter: Iniciando extracción...');
     isScanning = true;
 
     // Guardar estado
@@ -200,7 +200,7 @@ async function startExtraction() {
     // Encontrar contenedor
     const chatList = findChatContainer();
     if (!chatList) {
-        console.error('WA Exporter: Lista de chats no encontrada');
+        console.error('Snatch Exporter: Lista de chats no encontrada');
         await chrome.storage.local.set({ 
             scanStatus: 'Error: Lista de chats no encontrada',
             isScanning: false
@@ -209,7 +209,7 @@ async function startExtraction() {
         return;
     }
 
-    console.log('WA Exporter: Contenedor encontrado, iniciando scroll...');
+    console.log('Snatch Exporter: Contenedor encontrado, iniciando scroll...');
 
     // Cargar datos existentes para evitar duplicados
     const storage = await chrome.storage.local.get(['scrapedData', 'lastScrollPosition']);
@@ -217,13 +217,13 @@ async function startExtraction() {
 
     if (storage.scrapedData && Array.isArray(storage.scrapedData)) {
         storage.scrapedData.forEach(c => uniqueContacts.set(c.id, c));
-        console.log(`WA Exporter: Cargados ${uniqueContacts.size} contactos existentes`);
+        console.log(`Snatch Exporter: Cargados ${uniqueContacts.size} contactos existentes`);
     }
 
     // Restaurar posición de scroll si se está reanudando
     if (storage.lastScrollPosition && storage.lastScrollPosition > 0) {
         chatList.scrollTop = storage.lastScrollPosition;
-        console.log(`WA Exporter: Scroll restaurado a ${storage.lastScrollPosition}`);
+        console.log(`Snatch Exporter: Scroll restaurado a ${storage.lastScrollPosition}`);
     }
 
     let previousScrollHeight = chatList.scrollTop;
@@ -235,7 +235,7 @@ async function startExtraction() {
     // Bucle de scroll
     const scanLoop = async () => {
         if (!isScanning) {
-            console.log('WA Exporter: Escaneo detenido por el usuario');
+            console.log('Snatch Exporter: Escaneo detenido por el usuario');
             return;
         }
 
@@ -267,7 +267,7 @@ async function startExtraction() {
         }
 
         if (scanCount % 5 === 0 || addedCount > 0) {
-            console.log(`WA Exporter: Scan ${scanCount} - Visibles: ${newContacts.length}, Nuevos: ${addedCount}, Total: ${uniqueContacts.size}`);
+            console.log(`Snatch Exporter: Scan ${scanCount} - Visibles: ${newContacts.length}, Nuevos: ${addedCount}, Total: ${uniqueContacts.size}`);
         }
 
         // 3. Hacer scroll
@@ -300,7 +300,7 @@ async function startExtraction() {
         if (scrollDifference < 10 || isAtBottom) {
             noChangeCount++;
             if (noChangeCount % 5 === 0) {
-                console.log(`WA Exporter: Sin cambio en scroll (${noChangeCount}/${maxNoChange})`);
+                console.log(`Snatch Exporter: Sin cambio en scroll (${noChangeCount}/${maxNoChange})`);
             }
         } else {
             noChangeCount = 0;
@@ -309,7 +309,7 @@ async function startExtraction() {
 
         // Condición de parada
         if (noChangeCount >= maxNoChange) {
-            console.log('WA Exporter: Fin de la lista alcanzado.');
+            console.log('Snatch Exporter: Fin de la lista alcanzado.');
             
             // Guardar final
             await chrome.storage.local.set({
@@ -334,7 +334,7 @@ async function startExtraction() {
 }
 
 function stopExtraction() {
-    console.log('WA Exporter: Deteniendo extracción...');
+    console.log('Snatch Exporter: Deteniendo extracción...');
     isScanning = false;
     
     if (scanIntervalId) {
@@ -434,7 +434,7 @@ function scrapeWithSelector(container, selector, contacts, seenIds) {
             }
         });
     } catch (e) {
-        console.warn('WA Exporter: Error con selector', selector, e);
+        console.warn('Snatch Exporter: Error con selector', selector, e);
     }
 }
 
@@ -566,7 +566,7 @@ function extractContactFromElement(element) {
 
 // Función de diagnóstico para debugging
 function runDiagnostics() {
-    console.log('=== WA Exporter: DIAGNÓSTICO ===');
+    console.log('=== Snatch Exporter: DIAGNÓSTICO ===');
     
     const diagnostics = {
         timestamp: new Date().toISOString(),
@@ -623,13 +623,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // Indicador visual de que el script está activo
-console.log('WA Exporter: Script listo y esperando comandos');
+console.log('Snatch Exporter: Script listo y esperando comandos');
 
 // Ejecutar diagnóstico automático al cargar (solo en modo debug)
 if (debugMode) {
     setTimeout(() => {
         if (document.querySelector('#app')) {
-            console.log('WA Exporter: WhatsApp Web detectado');
+            console.log('Snatch Exporter: WhatsApp Web detectado');
             runDiagnostics();
         }
     }, 3000);
