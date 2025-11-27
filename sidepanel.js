@@ -1,5 +1,5 @@
-// popup.js - Script principal del popup
-// Versión corregida y limpia
+// sidepanel.js - Panel lateral para WA Exporter
+// Versión corregida y sincronizada con content.js
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- Elements ---
@@ -73,13 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             updateProgressInfo();
-            
-            // If was scanning but window closed, show resume option
-            if (isScanning && scrapedData.length > 0) {
-                if (statusText) {
-                    statusText.textContent = `Reanudando... ${scrapedData.length} contactos guardados`;
-                }
-            }
         } else {
             checkWhatsAppTab();
         }
@@ -104,15 +97,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!btnScrape) return;
         if (scanning) {
             btnScrape.textContent = "⏹ Detener Extracción";
-            btnScrape.style.background = "#ef4444"; // Red
+            btnScrape.style.background = "#ef4444";
             btnScrape.classList.add('scanning');
         } else {
             if (scrapedData.length > 0) {
                 btnScrape.textContent = "▶ Reanudar Extracción";
-                btnScrape.style.background = "#22c55e"; // Green
+                btnScrape.style.background = "#22c55e";
             } else {
                 btnScrape.textContent = "▶ Iniciar Extracción";
-                btnScrape.style.background = ""; // Default gradient
+                btnScrape.style.background = "";
             }
             btnScrape.classList.remove('scanning');
         }
@@ -120,13 +113,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Helper: Send Message ---
     async function sendMessageToContent(message) {
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        if (!tab) return { success: false, error: "No hay pestaña activa" };
+        // Buscar la pestaña de WhatsApp Web
+        const tabs = await chrome.tabs.query({ url: "https://web.whatsapp.com/*" });
+        
+        if (!tabs || tabs.length === 0) {
+            console.warn("WA Exporter: No se encontró pestaña de WhatsApp");
+            return { success: false, error: "WhatsApp Web no está abierto" };
+        }
+
+        const tab = tabs[0];
 
         return new Promise((resolve) => {
             chrome.tabs.sendMessage(tab.id, message, (response) => {
                 if (chrome.runtime.lastError) {
-                    // Try injecting if failed
+                    console.warn("Error de conexión:", chrome.runtime.lastError.message);
+                    // Intentar inyectar el script
                     chrome.scripting.executeScript({
                         target: { tabId: tab.id },
                         files: ['content.js']
@@ -137,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                         }, 500);
                     }).catch(() => {
-                        resolve({ success: false, error: "Por favor recarga la página de WhatsApp" });
+                        resolve({ success: false, error: "Por favor recarga WhatsApp Web" });
                     });
                 } else {
                     resolve(response || { success: true });
@@ -185,12 +186,13 @@ document.addEventListener('DOMContentLoaded', () => {
         viewError.classList.add('hidden');
         viewReady.classList.add('hidden');
         viewSuccess.classList.add('hidden');
-        document.getElementById(viewId).classList.remove('hidden');
+        const target = document.getElementById(viewId);
+        if (target) target.classList.remove('hidden');
     }
 
     async function checkWhatsAppTab() {
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        if (tab && tab.url && tab.url.includes("web.whatsapp.com")) {
+        const tabs = await chrome.tabs.query({ url: "https://web.whatsapp.com/*" });
+        if (tabs && tabs.length > 0) {
             showView('view-ready');
         } else {
             showView('view-error');
@@ -203,25 +205,17 @@ document.addEventListener('DOMContentLoaded', () => {
         updateProgressInfo();
     }
 
-    // Refresh / Open WhatsApp
+    // Refresh
     if (btnRefresh) {
         btnRefresh.addEventListener('click', async () => {
-            // Search for WhatsApp Web tab
             const tabs = await chrome.tabs.query({ url: "https://web.whatsapp.com/*" });
-
             if (tabs && tabs.length > 0) {
-                // If found, activate and reload the first one
-                const tab = tabs[0];
-                await chrome.tabs.update(tab.id, { active: true });
-                await chrome.windows.update(tab.windowId, { focused: true });
-                chrome.tabs.reload(tab.id);
+                await chrome.tabs.update(tabs[0].id, { active: true });
+                chrome.tabs.reload(tabs[0].id);
             } else {
-                // If not found, open a new one
                 await chrome.tabs.create({ url: "https://web.whatsapp.com" });
             }
-
-            // Close popup after action
-            window.close();
+            setTimeout(checkWhatsAppTab, 3000);
         });
     }
 
@@ -231,13 +225,14 @@ document.addEventListener('DOMContentLoaded', () => {
             showView('view-success');
             if (statusText) statusText.textContent = "Iniciando extracción...";
             
+            // IMPORTANTE: Usar START_SCRAPE que es lo que espera content.js
             const response = await sendMessageToContent({ action: "START_SCRAPE" });
 
             if (response && (response.status === 'started' || response.status === 'already_running')) {
                 isScanning = true;
                 updateScrapeButton(true);
             } else {
-                if (statusText) statusText.textContent = "Error al iniciar. Recarga la página de WhatsApp.";
+                if (statusText) statusText.textContent = "Error al iniciar. Recarga WhatsApp Web.";
             }
         });
     }
@@ -253,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateScrapeButton(false);
                 if (statusText) statusText.textContent = `Pausado: ${scrapedData.length} contactos guardados`;
             } else {
-                // Start or Resume
+                // Start or Resume - USAR START_SCRAPE
                 if (scrapedData.length > 0) {
                     if (statusText) statusText.textContent = `Reanudando desde ${scrapedData.length} contactos...`;
                 } else {
@@ -266,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     isScanning = true;
                     updateScrapeButton(true);
                 } else {
-                    if (statusText) statusText.textContent = "Error al iniciar. Recarga la página de WhatsApp.";
+                    if (statusText) statusText.textContent = "Error al iniciar. Recarga WhatsApp Web.";
                 }
             }
         });
@@ -276,11 +271,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnClear) {
         btnClear.addEventListener('click', async () => {
             if (confirm('¿Estás seguro de que quieres borrar todos los contactos guardados?')) {
-                // Stop scanning if running
                 if (isScanning) {
                     await sendMessageToContent({ action: "STOP_SCRAPE" });
                 }
-                // Clear data
                 scrapedData = [];
                 await chrome.storage.local.set({
                     scrapedData: [],
@@ -295,23 +288,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Back (doesn't clear data)
+    // Back
     if (btnBack) {
         btnBack.addEventListener('click', async () => {
-            // Stop scanning if running
             if (isScanning) {
                 await sendMessageToContent({ action: "STOP_SCRAPE" });
                 isScanning = false;
             }
-            
-            // Go back to ready view
             showView('view-ready');
             updateScrapeButton(false);
-            
-            // Show message that data is preserved
-            if (scrapedData.length > 0) {
-                console.log(`WA Exporter: ${scrapedData.length} contactos preservados en storage`);
-            }
         });
     }
 
@@ -380,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Auto-save reminder ---
+    // --- Auto-refresh ---
     setInterval(() => {
         if (isScanning) {
             updateProgressInfo();

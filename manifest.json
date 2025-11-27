@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "WhatsApp Contact Exporter",
-  "version": "1.1",
-  "description": "Export contacts from WhatsApp Web to CSV, Excel, or TXT. Premium Design.",
+  "version": "1.3",
+  "description": "Exporta contactos de WhatsApp Web a CSV, Excel o TXT.",
   "permissions": [
     "activeTab",
     "scripting",
@@ -12,6 +12,9 @@
   "host_permissions": [
     "https://web.whatsapp.com/*"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": [
@@ -22,22 +25,12 @@
       ],
       "css": [
         "content.css"
-      ]
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "sidebar.html",
-        "popup.css",
-        "popup.js"
       ],
-      "matches": [
-        "https://web.whatsapp.com/*"
-      ]
+      "run_at": "document_idle"
     }
   ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_title": "WA Contact Exporter"
   }
 }
