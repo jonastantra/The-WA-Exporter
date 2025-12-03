@@ -1,0 +1,266 @@
+{
+  "extensionName": {
+    "message": "Snatch WhatsApp Exporter",
+    "description": "Extension name shown in browser"
+  },
+  "extensionDescription": {
+    "message": "WhatsApp Web 연락처를 CSV, Excel, JSON 또는 VCard로 내보내기. 이름, 전화번호, 메시지를 빠르고 안전하게 추출.",
+    "description": "Extension description shown in browser"
+  },
+  "appTitle": {
+    "message": "Snatch Exporter",
+    "description": "App title in header"
+  },
+  "proBadge": {
+    "message": "PRO",
+    "description": "PRO badge text"
+  },
+  "navHome": {
+    "message": "홈",
+    "description": "Home navigation tooltip"
+  },
+  "navHelp": {
+    "message": "도움말",
+    "description": "Help navigation tooltip"
+  },
+  "errorWhatsAppNotDetected": {
+    "message": "WhatsApp이 감지되지 않음",
+    "description": "Error title when WhatsApp is not detected"
+  },
+  "errorOpenWhatsApp": {
+    "message": "연락처 추출을 시작하려면 WhatsApp Web을 열어주세요.",
+    "description": "Error message when WhatsApp is not detected"
+  },
+  "btnOpenWhatsApp": {
+    "message": "🔄 WhatsApp Web 열기",
+    "description": "Button to open WhatsApp Web"
+  },
+  "readyToExtract": {
+    "message": "추출 준비 완료",
+    "description": "Ready state title"
+  },
+  "readyDescription": {
+    "message": "WhatsApp Web이 감지되었습니다. 클릭하여 연락처 스캔을 시작하세요.",
+    "description": "Ready state description"
+  },
+  "btnStartExtraction": {
+    "message": "▶ 추출 시작",
+    "description": "Start extraction button"
+  },
+  "btnStopExtraction": {
+    "message": "⏹ 추출 중지",
+    "description": "Stop extraction button"
+  },
+  "btnResumeExtraction": {
+    "message": "▶ 추출 재개",
+    "description": "Resume extraction button"
+  },
+  "statusExtracting": {
+    "message": "추출 중...",
+    "description": "Extraction in progress status"
+  },
+  "contactsFound": {
+    "message": "발견된 연락처",
+    "description": "Contacts found label"
+  },
+  "btnDownload": {
+    "message": "📥 연락처 다운로드",
+    "description": "Download contacts button"
+  },
+  "btnBack": {
+    "message": "← 뒤로",
+    "description": "Back button"
+  },
+  "btnClear": {
+    "message": "🗑 지우기",
+    "description": "Clear data button"
+  },
+  "faqTitle": {
+    "message": "자주 묻는 질문",
+    "description": "FAQ section title"
+  },
+  "faqHowItWorks": {
+    "message": "어떻게 작동하나요?",
+    "description": "FAQ question - How it works"
+  },
+  "faqHowItWorksAnswer": {
+    "message": "확장 프로그램이 채팅 목록을 자동으로 스크롤하고 이름과 전화번호를 로컬에서 추출합니다.",
+    "description": "FAQ answer - How it works"
+  },
+  "faqIsSafe": {
+    "message": "안전한가요?",
+    "description": "FAQ question - Is it safe"
+  },
+  "faqIsSafeAnswer": {
+    "message": "예, 모든 것이 컴퓨터에서 이루어집니다. 서버로 데이터를 전송하지 않습니다.",
+    "description": "FAQ answer - Is it safe"
+  },
+  "faqWhyStopped": {
+    "message": "왜 멈췄나요?",
+    "description": "FAQ question - Why stopped"
+  },
+  "faqWhyStoppedAnswer": {
+    "message": "목록 끝에 도달하면 중지됩니다. 언제든지 재개할 수 있습니다.",
+    "description": "FAQ answer - Why stopped"
+  },
+  "faqExportIphone": {
+    "message": "iPhone으로 내보내는 방법?",
+    "description": "FAQ question - Export to iPhone"
+  },
+  "faqExportIphoneAnswer": {
+    "message": "VCard (.vcf) 형식을 사용하고 iPhone에서 열어 연락처를 가져오세요.",
+    "description": "FAQ answer - Export to iPhone"
+  },
+  "tipKeepOpen": {
+    "message": "💡 <strong>팁:</strong> 추출 중에는 WhatsApp Web을 열어두세요.",
+    "description": "Tip about keeping WhatsApp open"
+  },
+  "statusResuming": {
+    "message": "재개 중... $1개 연락처 저장됨",
+    "description": "Resuming status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusAutoSaving": {
+    "message": "(자동 저장 중)",
+    "description": "Auto-saving status indicator"
+  },
+  "statusSaved": {
+    "message": "(저장됨)",
+    "description": "Saved status indicator"
+  },
+  "contacts": {
+    "message": "연락처",
+    "description": "Contacts word"
+  },
+  "noActiveTab": {
+    "message": "활성 탭이 없습니다",
+    "description": "Error when no active tab"
+  },
+  "connectionFailed": {
+    "message": "연결 실패",
+    "description": "Connection failed error"
+  },
+  "pleaseReloadWhatsApp": {
+    "message": "WhatsApp 페이지를 새로고침해주세요",
+    "description": "Message to reload WhatsApp"
+  },
+  "statusStarting": {
+    "message": "추출 시작 중...",
+    "description": "Starting extraction status"
+  },
+  "statusStartingShort": {
+    "message": "시작 중...",
+    "description": "Short starting status"
+  },
+  "errorStarting": {
+    "message": "시작 오류. WhatsApp 페이지를 새로고침해주세요.",
+    "description": "Error starting extraction"
+  },
+  "statusStopping": {
+    "message": "중지 중...",
+    "description": "Stopping status"
+  },
+  "statusPaused": {
+    "message": "일시정지: $1개 연락처 저장됨",
+    "description": "Paused status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusResumingFrom": {
+    "message": "$1개 연락처부터 재개 중...",
+    "description": "Resuming from X contacts",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "confirmClear": {
+    "message": "저장된 모든 연락처를 삭제하시겠습니까?",
+    "description": "Confirm clear data dialog"
+  },
+  "statusReady": {
+    "message": "준비 완료",
+    "description": "Ready status"
+  },
+  "statusCleared": {
+    "message": "데이터가 지워졌습니다. 새 추출 준비 완료.",
+    "description": "Data cleared message"
+  },
+  "noContactsToDownload": {
+    "message": "다운로드할 연락처가 없습니다",
+    "description": "No contacts to download alert"
+  },
+  "csvHeaderName": {
+    "message": "이름",
+    "description": "CSV header - Name"
+  },
+  "csvHeaderPhone": {
+    "message": "전화",
+    "description": "CSV header - Phone"
+  },
+  "csvHeaderLastMessage": {
+    "message": "마지막 메시지",
+    "description": "CSV header - Last Message"
+  },
+  "unknownContact": {
+    "message": "알 수 없음",
+    "description": "Unknown contact name for vCard"
+  },
+  "statusScanning": {
+    "message": "스캔 중...",
+    "description": "Scanning status in content script"
+  },
+  "errorChatListNotFound": {
+    "message": "오류: 채팅 목록을 찾을 수 없습니다",
+    "description": "Error when chat list not found"
+  },
+  "statusCompleted": {
+    "message": "✓ 완료: $1개 연락처",
+    "description": "Completed status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "progressContacts": {
+    "message": "📁 $1개 연락처 $2",
+    "description": "Progress info with contact count and status",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      },
+      "2": {
+        "content": "$2",
+        "example": "(저장됨)"
+      }
+    }
+  },
+  "whatsAppNotOpen": {
+    "message": "WhatsApp Web이 열려있지 않습니다",
+    "description": "WhatsApp Web is not open error"
+  },
+  "pleaseReloadWhatsAppWeb": {
+    "message": "WhatsApp Web을 새로고침해주세요",
+    "description": "Please reload WhatsApp Web message"
+  },
+  "errorStartingShort": {
+    "message": "시작 오류. WhatsApp Web을 새로고침해주세요.",
+    "description": "Short error starting message"
+  }
+}
+
+

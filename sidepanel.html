@@ -4,111 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snatch WhatsApp Exporter</title>
-    <link rel="stylesheet" href="popup.css">
-    <style>
-        html, body { width: 100%; height: 100vh; }
-        .main-container { height: calc(100vh - var(--header-height)); }
-    </style>
+    <link rel="stylesheet" href="sidepanel.css">
 </head>
 <body>
-    <header>
-        <div class="logo-area">
+    <!-- Header Fijo -->
+    <header class="header">
+        <div class="header-left">
             <div class="logo-icon">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="white">
+                <svg viewBox="0 0 24 24">
                     <path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.966-.273-.101-.473-.15-.673.15-.197.295-.771.964-.944 1.162-.175.195-.349.21-.646.075-.3-.15-1.263-.465-2.403-1.485-.888-.795-1.484-1.77-1.66-2.07-.174-.3-.019-.465.13-.615.136-.135.301-.345.451-.523.146-.181.194-.301.297-.496.1-.21.049-.375-.025-.524-.075-.15-.672-1.62-.922-2.206-.24-.584-.487-.51-.672-.51-.172-.015-.371-.015-.571-.015-.2 0-.523.074-.797.359-.273.3-1.045 1.02-1.045 2.475s1.07 2.865 1.219 3.075c.149.195 2.105 3.195 5.1 4.485.714.3 1.27.48 1.704.629.714.227 1.365.195 1.88.121.574-.091 1.767-.721 2.016-1.426.255-.705.255-1.29.18-1.425-.074-.135-.27-.21-.57-.345m-5.446 7.443h-.016c-1.77 0-3.524-.48-5.055-1.38l-.36-.214-3.75.975 1.005-3.645-.239-.375a9.869 9.869 0 01-1.516-5.26c0-5.445 4.455-9.885 9.942-9.885a9.865 9.865 0 017.021 2.91 9.788 9.788 0 012.909 6.99c-.004 5.444-4.46 9.885-9.935 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652a12.062 12.062 0 005.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.495-8.411"/>
                 </svg>
             </div>
-            <span>Snatch Exporter</span>
+            <span class="header-title">Snatch Exporter</span>
         </div>
         <div class="pro-badge">
-            <span class="pro-icon">★</span> PRO
+            <span>★</span> PRO
         </div>
     </header>
 
-    <div class="main-container">
-        <nav class="sidebar">
-            <div class="nav-item active" data-target="home-page" title="Inicio">
-                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg>
-            </div>
-            <div class="nav-item" data-target="help-page" title="Ayuda">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" /></svg>
-            </div>
-        </nav>
-
-        <main class="content">
-            <div id="home-page" class="page active">
-                <div id="view-error" class="hidden card">
-                    <div class="success-circle" style="background: #fee2e2;">
-                        <svg viewBox="0 0 24 24" style="fill: #ef4444;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" /></svg>
-                    </div>
-                    <h2>WhatsApp No Detectado</h2>
-                    <p>Por favor abre WhatsApp Web para comenzar a extraer contactos.</p>
-                    <button id="btnRefresh" class="btn btn-primary">🔄 Abrir WhatsApp Web</button>
-                </div>
-
-                <div id="view-ready" class="hidden card">
-                    <div class="success-circle" style="background: #e0e7ff;">
-                        <svg viewBox="0 0 24 24" style="fill: #6366f1;"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z" /></svg>
-                    </div>
-                    <h2>Listo para Extraer</h2>
-                    <p>WhatsApp Web detectado. Haz clic para comenzar a escanear tus contactos.</p>
-                    <button id="btnStartScrape" class="btn btn-primary">▶ Iniciar Extracción</button>
-                </div>
-
-                <div id="view-success" class="hidden card">
-                    <div class="success-circle">
-                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" /></svg>
-                    </div>
-                    <p id="statusText" class="text-sm status-text">Extracción en progreso...</p>
-                    <div id="contactCount" class="stat-number">0</div>
-                    <p class="text-sm">Contactos Encontrados</p>
-                    <div id="progressInfo" class="progress-info" style="display: none;"></div>
-                    <div class="format-grid">
-                        <div class="format-option active" data-format="csv">CSV</div>
-                        <div class="format-option" data-format="xlsx">Excel</div>
-                        <div class="format-option" data-format="json">JSON</div>
-                        <div class="format-option" data-format="vcard">VCard</div>
-                    </div>
-                    <button id="btnScrape" class="btn btn-primary">▶ Iniciar Extracción</button>
-                    <button id="btnDownload" class="btn btn-success mt-2">📥 Descargar Contactos</button>
-                    <div class="btn-row mt-4">
-                        <button id="btnBack" class="btn btn-outline">← Volver</button>
-                        <button id="btnClear" class="btn btn-danger">🗑 Borrar</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="help-page" class="page">
-                <h2 class="help-title">Preguntas Frecuentes</h2>
-                
-                <details class="faq-details">
-                    <summary>¿Cómo funciona?</summary>
-                    <p>La extensión hace scroll automático por tu lista de chats y extrae nombres y números de teléfono de forma local.</p>
-                </details>
-                
-                <details class="faq-details">
-                    <summary>¿Es seguro?</summary>
-                    <p>Sí, todo ocurre en tu computadora. No enviamos datos a ningún servidor.</p>
-                </details>
-                
-                <details class="faq-details">
-                    <summary>¿Por qué se detuvo?</summary>
-                    <p>Se detiene al llegar al final de la lista. Puedes reanudar en cualquier momento.</p>
-                </details>
-                
-                <details class="faq-details">
-                    <summary>¿Cómo exportar a iPhone?</summary>
-                    <p>Usa el formato VCard (.vcf) y ábrelo en tu iPhone para importar los contactos.</p>
-                </details>
-
-                <div class="tip-box">
-                    💡 <strong>Tip:</strong> Mantén WhatsApp Web abierto durante la extracción.
-                </div>
-            </div>
-        </main>
+    <!-- Contenedor Principal Dinámico -->
+    <div id="appContainer" class="app-container">
+        <!-- El contenido se genera dinámicamente según el estado -->
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <span>v2.1 - Snatch Exporter</span>
+    </footer>
+
+    <script src="i18n.js"></script>
     <script src="sidepanel.js"></script>
 </body>
-</html>
-</html>
 </html>

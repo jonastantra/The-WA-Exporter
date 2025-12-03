@@ -1,25 +1,19 @@
 {
   "manifest_version": 3,
-  "name": "__MSG_extensionName__",
-  "version": "2.1",
-  "description": "__MSG_extensionDescription__",
-  "default_locale": "es",
+  "name": "Snatch WhatsApp Exporter",
+  "version": "1.3",
+  "description": "Exporta contactos de WhatsApp Web a CSV, Excel, JSON o VCard. Extrae nombres, teléfonos y mensajes de forma rápida y segura.",
   "permissions": [
-    "sidePanel",
     "activeTab",
     "scripting",
     "downloads",
-    "storage",
-    "tabs"
+    "storage"
   ],
   "host_permissions": [
     "https://web.whatsapp.com/*"
   ],
   "background": {
     "service_worker": "background.js"
-  },
-  "side_panel": {
-    "default_path": "sidepanel.html"
   },
   "content_scripts": [
     {
@@ -36,7 +30,8 @@
     }
   ],
   "action": {
-    "default_title": "__MSG_extensionName__",
+    "default_popup": "popup.html",
+    "default_title": "Snatch WhatsApp Exporter",
     "default_icon": {
       "16": "favicon/favicon-16x16.png",
       "32": "favicon/favicon-32x32.png",

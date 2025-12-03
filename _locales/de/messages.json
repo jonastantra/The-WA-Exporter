@@ -1,0 +1,266 @@
+{
+  "extensionName": {
+    "message": "Snatch WhatsApp Exporter",
+    "description": "Extension name shown in browser"
+  },
+  "extensionDescription": {
+    "message": "Exportieren Sie WhatsApp Web-Kontakte nach CSV, Excel, JSON oder VCard. Extrahieren Sie Namen, Telefone und Nachrichten schnell und sicher.",
+    "description": "Extension description shown in browser"
+  },
+  "appTitle": {
+    "message": "Snatch Exporter",
+    "description": "App title in header"
+  },
+  "proBadge": {
+    "message": "PRO",
+    "description": "PRO badge text"
+  },
+  "navHome": {
+    "message": "Startseite",
+    "description": "Home navigation tooltip"
+  },
+  "navHelp": {
+    "message": "Hilfe",
+    "description": "Help navigation tooltip"
+  },
+  "errorWhatsAppNotDetected": {
+    "message": "WhatsApp Nicht Erkannt",
+    "description": "Error title when WhatsApp is not detected"
+  },
+  "errorOpenWhatsApp": {
+    "message": "Bitte öffnen Sie WhatsApp Web, um mit der Kontaktextraktion zu beginnen.",
+    "description": "Error message when WhatsApp is not detected"
+  },
+  "btnOpenWhatsApp": {
+    "message": "🔄 WhatsApp Web Öffnen",
+    "description": "Button to open WhatsApp Web"
+  },
+  "readyToExtract": {
+    "message": "Bereit zum Extrahieren",
+    "description": "Ready state title"
+  },
+  "readyDescription": {
+    "message": "WhatsApp Web erkannt. Klicken Sie, um Ihre Kontakte zu scannen.",
+    "description": "Ready state description"
+  },
+  "btnStartExtraction": {
+    "message": "▶ Extraktion Starten",
+    "description": "Start extraction button"
+  },
+  "btnStopExtraction": {
+    "message": "⏹ Extraktion Stoppen",
+    "description": "Stop extraction button"
+  },
+  "btnResumeExtraction": {
+    "message": "▶ Extraktion Fortsetzen",
+    "description": "Resume extraction button"
+  },
+  "statusExtracting": {
+    "message": "Extraktion läuft...",
+    "description": "Extraction in progress status"
+  },
+  "contactsFound": {
+    "message": "Kontakte Gefunden",
+    "description": "Contacts found label"
+  },
+  "btnDownload": {
+    "message": "📥 Kontakte Herunterladen",
+    "description": "Download contacts button"
+  },
+  "btnBack": {
+    "message": "← Zurück",
+    "description": "Back button"
+  },
+  "btnClear": {
+    "message": "🗑 Löschen",
+    "description": "Clear data button"
+  },
+  "faqTitle": {
+    "message": "Häufig Gestellte Fragen",
+    "description": "FAQ section title"
+  },
+  "faqHowItWorks": {
+    "message": "Wie funktioniert es?",
+    "description": "FAQ question - How it works"
+  },
+  "faqHowItWorksAnswer": {
+    "message": "Die Erweiterung scrollt automatisch durch Ihre Chat-Liste und extrahiert Namen und Telefonnummern lokal.",
+    "description": "FAQ answer - How it works"
+  },
+  "faqIsSafe": {
+    "message": "Ist es sicher?",
+    "description": "FAQ question - Is it safe"
+  },
+  "faqIsSafeAnswer": {
+    "message": "Ja, alles geschieht auf Ihrem Computer. Wir senden keine Daten an Server.",
+    "description": "FAQ answer - Is it safe"
+  },
+  "faqWhyStopped": {
+    "message": "Warum hat es gestoppt?",
+    "description": "FAQ question - Why stopped"
+  },
+  "faqWhyStoppedAnswer": {
+    "message": "Es stoppt am Ende der Liste. Sie können jederzeit fortfahren.",
+    "description": "FAQ answer - Why stopped"
+  },
+  "faqExportIphone": {
+    "message": "Wie exportiere ich zum iPhone?",
+    "description": "FAQ question - Export to iPhone"
+  },
+  "faqExportIphoneAnswer": {
+    "message": "Verwenden Sie das VCard-Format (.vcf) und öffnen Sie es auf Ihrem iPhone, um die Kontakte zu importieren.",
+    "description": "FAQ answer - Export to iPhone"
+  },
+  "tipKeepOpen": {
+    "message": "💡 <strong>Tipp:</strong> Halten Sie WhatsApp Web während der Extraktion geöffnet.",
+    "description": "Tip about keeping WhatsApp open"
+  },
+  "statusResuming": {
+    "message": "Wird fortgesetzt... $1 Kontakte gespeichert",
+    "description": "Resuming status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusAutoSaving": {
+    "message": "(automatisch speichern)",
+    "description": "Auto-saving status indicator"
+  },
+  "statusSaved": {
+    "message": "(gespeichert)",
+    "description": "Saved status indicator"
+  },
+  "contacts": {
+    "message": "Kontakte",
+    "description": "Contacts word"
+  },
+  "noActiveTab": {
+    "message": "Kein aktiver Tab",
+    "description": "Error when no active tab"
+  },
+  "connectionFailed": {
+    "message": "Verbindung fehlgeschlagen",
+    "description": "Connection failed error"
+  },
+  "pleaseReloadWhatsApp": {
+    "message": "Bitte laden Sie die WhatsApp-Seite neu",
+    "description": "Message to reload WhatsApp"
+  },
+  "statusStarting": {
+    "message": "Extraktion wird gestartet...",
+    "description": "Starting extraction status"
+  },
+  "statusStartingShort": {
+    "message": "Startet...",
+    "description": "Short starting status"
+  },
+  "errorStarting": {
+    "message": "Fehler beim Start. Laden Sie die WhatsApp-Seite neu.",
+    "description": "Error starting extraction"
+  },
+  "statusStopping": {
+    "message": "Wird gestoppt...",
+    "description": "Stopping status"
+  },
+  "statusPaused": {
+    "message": "Pausiert: $1 Kontakte gespeichert",
+    "description": "Paused status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusResumingFrom": {
+    "message": "Fortsetzen von $1 Kontakten...",
+    "description": "Resuming from X contacts",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "confirmClear": {
+    "message": "Sind Sie sicher, dass Sie alle gespeicherten Kontakte löschen möchten?",
+    "description": "Confirm clear data dialog"
+  },
+  "statusReady": {
+    "message": "Bereit",
+    "description": "Ready status"
+  },
+  "statusCleared": {
+    "message": "Daten gelöscht. Bereit für neue Extraktion.",
+    "description": "Data cleared message"
+  },
+  "noContactsToDownload": {
+    "message": "Keine Kontakte zum Herunterladen",
+    "description": "No contacts to download alert"
+  },
+  "csvHeaderName": {
+    "message": "Name",
+    "description": "CSV header - Name"
+  },
+  "csvHeaderPhone": {
+    "message": "Telefon",
+    "description": "CSV header - Phone"
+  },
+  "csvHeaderLastMessage": {
+    "message": "Letzte Nachricht",
+    "description": "CSV header - Last Message"
+  },
+  "unknownContact": {
+    "message": "Unbekannt",
+    "description": "Unknown contact name for vCard"
+  },
+  "statusScanning": {
+    "message": "Scannen...",
+    "description": "Scanning status in content script"
+  },
+  "errorChatListNotFound": {
+    "message": "Fehler: Chat-Liste nicht gefunden",
+    "description": "Error when chat list not found"
+  },
+  "statusCompleted": {
+    "message": "✓ Abgeschlossen: $1 Kontakte",
+    "description": "Completed status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "progressContacts": {
+    "message": "📁 $1 Kontakte $2",
+    "description": "Progress info with contact count and status",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      },
+      "2": {
+        "content": "$2",
+        "example": "(gespeichert)"
+      }
+    }
+  },
+  "whatsAppNotOpen": {
+    "message": "WhatsApp Web ist nicht geöffnet",
+    "description": "WhatsApp Web is not open error"
+  },
+  "pleaseReloadWhatsAppWeb": {
+    "message": "Bitte laden Sie WhatsApp Web neu",
+    "description": "Please reload WhatsApp Web message"
+  },
+  "errorStartingShort": {
+    "message": "Fehler beim Start. Laden Sie WhatsApp Web neu.",
+    "description": "Short error starting message"
+  }
+}
+
+

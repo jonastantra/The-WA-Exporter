@@ -1,0 +1,266 @@
+{
+  "extensionName": {
+    "message": "Snatch WhatsApp Exporter",
+    "description": "Extension name shown in browser"
+  },
+  "extensionDescription": {
+    "message": "将WhatsApp Web联系人导出为CSV、Excel、JSON或VCard。快速安全地提取姓名、电话和消息。",
+    "description": "Extension description shown in browser"
+  },
+  "appTitle": {
+    "message": "Snatch Exporter",
+    "description": "App title in header"
+  },
+  "proBadge": {
+    "message": "PRO",
+    "description": "PRO badge text"
+  },
+  "navHome": {
+    "message": "首页",
+    "description": "Home navigation tooltip"
+  },
+  "navHelp": {
+    "message": "帮助",
+    "description": "Help navigation tooltip"
+  },
+  "errorWhatsAppNotDetected": {
+    "message": "未检测到WhatsApp",
+    "description": "Error title when WhatsApp is not detected"
+  },
+  "errorOpenWhatsApp": {
+    "message": "请打开WhatsApp Web以开始提取联系人。",
+    "description": "Error message when WhatsApp is not detected"
+  },
+  "btnOpenWhatsApp": {
+    "message": "🔄 打开WhatsApp Web",
+    "description": "Button to open WhatsApp Web"
+  },
+  "readyToExtract": {
+    "message": "准备提取",
+    "description": "Ready state title"
+  },
+  "readyDescription": {
+    "message": "已检测到WhatsApp Web。点击开始扫描您的联系人。",
+    "description": "Ready state description"
+  },
+  "btnStartExtraction": {
+    "message": "▶ 开始提取",
+    "description": "Start extraction button"
+  },
+  "btnStopExtraction": {
+    "message": "⏹ 停止提取",
+    "description": "Stop extraction button"
+  },
+  "btnResumeExtraction": {
+    "message": "▶ 继续提取",
+    "description": "Resume extraction button"
+  },
+  "statusExtracting": {
+    "message": "正在提取...",
+    "description": "Extraction in progress status"
+  },
+  "contactsFound": {
+    "message": "已找到联系人",
+    "description": "Contacts found label"
+  },
+  "btnDownload": {
+    "message": "📥 下载联系人",
+    "description": "Download contacts button"
+  },
+  "btnBack": {
+    "message": "← 返回",
+    "description": "Back button"
+  },
+  "btnClear": {
+    "message": "🗑 清除",
+    "description": "Clear data button"
+  },
+  "faqTitle": {
+    "message": "常见问题",
+    "description": "FAQ section title"
+  },
+  "faqHowItWorks": {
+    "message": "如何工作？",
+    "description": "FAQ question - How it works"
+  },
+  "faqHowItWorksAnswer": {
+    "message": "扩展程序自动滚动您的聊天列表，并在本地提取姓名和电话号码。",
+    "description": "FAQ answer - How it works"
+  },
+  "faqIsSafe": {
+    "message": "安全吗？",
+    "description": "FAQ question - Is it safe"
+  },
+  "faqIsSafeAnswer": {
+    "message": "是的，一切都在您的电脑上进行。我们不会向任何服务器发送数据。",
+    "description": "FAQ answer - Is it safe"
+  },
+  "faqWhyStopped": {
+    "message": "为什么停止了？",
+    "description": "FAQ question - Why stopped"
+  },
+  "faqWhyStoppedAnswer": {
+    "message": "到达列表末尾时停止。您可以随时继续。",
+    "description": "FAQ answer - Why stopped"
+  },
+  "faqExportIphone": {
+    "message": "如何导出到iPhone？",
+    "description": "FAQ question - Export to iPhone"
+  },
+  "faqExportIphoneAnswer": {
+    "message": "使用VCard (.vcf)格式，在iPhone上打开以导入联系人。",
+    "description": "FAQ answer - Export to iPhone"
+  },
+  "tipKeepOpen": {
+    "message": "💡 <strong>提示：</strong>在提取过程中保持WhatsApp Web打开。",
+    "description": "Tip about keeping WhatsApp open"
+  },
+  "statusResuming": {
+    "message": "正在恢复... 已保存$1个联系人",
+    "description": "Resuming status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusAutoSaving": {
+    "message": "(自动保存中)",
+    "description": "Auto-saving status indicator"
+  },
+  "statusSaved": {
+    "message": "(已保存)",
+    "description": "Saved status indicator"
+  },
+  "contacts": {
+    "message": "联系人",
+    "description": "Contacts word"
+  },
+  "noActiveTab": {
+    "message": "没有活动标签页",
+    "description": "Error when no active tab"
+  },
+  "connectionFailed": {
+    "message": "连接失败",
+    "description": "Connection failed error"
+  },
+  "pleaseReloadWhatsApp": {
+    "message": "请重新加载WhatsApp页面",
+    "description": "Message to reload WhatsApp"
+  },
+  "statusStarting": {
+    "message": "正在开始提取...",
+    "description": "Starting extraction status"
+  },
+  "statusStartingShort": {
+    "message": "正在启动...",
+    "description": "Short starting status"
+  },
+  "errorStarting": {
+    "message": "启动错误。请重新加载WhatsApp页面。",
+    "description": "Error starting extraction"
+  },
+  "statusStopping": {
+    "message": "正在停止...",
+    "description": "Stopping status"
+  },
+  "statusPaused": {
+    "message": "已暂停：$1个联系人已保存",
+    "description": "Paused status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusResumingFrom": {
+    "message": "从$1个联系人继续...",
+    "description": "Resuming from X contacts",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "confirmClear": {
+    "message": "您确定要删除所有已保存的联系人吗？",
+    "description": "Confirm clear data dialog"
+  },
+  "statusReady": {
+    "message": "就绪",
+    "description": "Ready status"
+  },
+  "statusCleared": {
+    "message": "数据已清除。准备进行新的提取。",
+    "description": "Data cleared message"
+  },
+  "noContactsToDownload": {
+    "message": "没有可下载的联系人",
+    "description": "No contacts to download alert"
+  },
+  "csvHeaderName": {
+    "message": "姓名",
+    "description": "CSV header - Name"
+  },
+  "csvHeaderPhone": {
+    "message": "电话",
+    "description": "CSV header - Phone"
+  },
+  "csvHeaderLastMessage": {
+    "message": "最后消息",
+    "description": "CSV header - Last Message"
+  },
+  "unknownContact": {
+    "message": "未知",
+    "description": "Unknown contact name for vCard"
+  },
+  "statusScanning": {
+    "message": "正在扫描...",
+    "description": "Scanning status in content script"
+  },
+  "errorChatListNotFound": {
+    "message": "错误：未找到聊天列表",
+    "description": "Error when chat list not found"
+  },
+  "statusCompleted": {
+    "message": "✓ 完成：$1个联系人",
+    "description": "Completed status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "progressContacts": {
+    "message": "📁 $1个联系人 $2",
+    "description": "Progress info with contact count and status",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      },
+      "2": {
+        "content": "$2",
+        "example": "(已保存)"
+      }
+    }
+  },
+  "whatsAppNotOpen": {
+    "message": "WhatsApp Web未打开",
+    "description": "WhatsApp Web is not open error"
+  },
+  "pleaseReloadWhatsAppWeb": {
+    "message": "请重新加载WhatsApp Web",
+    "description": "Please reload WhatsApp Web message"
+  },
+  "errorStartingShort": {
+    "message": "启动错误。请重新加载WhatsApp Web。",
+    "description": "Short error starting message"
+  }
+}
+
+

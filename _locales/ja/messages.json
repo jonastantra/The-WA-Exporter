@@ -1,0 +1,266 @@
+{
+  "extensionName": {
+    "message": "Snatch WhatsApp Exporter",
+    "description": "Extension name shown in browser"
+  },
+  "extensionDescription": {
+    "message": "WhatsApp Webの連絡先をCSV、Excel、JSON、VCardにエクスポート。名前、電話番号、メッセージを迅速かつ安全に抽出。",
+    "description": "Extension description shown in browser"
+  },
+  "appTitle": {
+    "message": "Snatch Exporter",
+    "description": "App title in header"
+  },
+  "proBadge": {
+    "message": "PRO",
+    "description": "PRO badge text"
+  },
+  "navHome": {
+    "message": "ホーム",
+    "description": "Home navigation tooltip"
+  },
+  "navHelp": {
+    "message": "ヘルプ",
+    "description": "Help navigation tooltip"
+  },
+  "errorWhatsAppNotDetected": {
+    "message": "WhatsAppが検出されません",
+    "description": "Error title when WhatsApp is not detected"
+  },
+  "errorOpenWhatsApp": {
+    "message": "連絡先の抽出を開始するには、WhatsApp Webを開いてください。",
+    "description": "Error message when WhatsApp is not detected"
+  },
+  "btnOpenWhatsApp": {
+    "message": "🔄 WhatsApp Webを開く",
+    "description": "Button to open WhatsApp Web"
+  },
+  "readyToExtract": {
+    "message": "抽出準備完了",
+    "description": "Ready state title"
+  },
+  "readyDescription": {
+    "message": "WhatsApp Webが検出されました。クリックして連絡先のスキャンを開始します。",
+    "description": "Ready state description"
+  },
+  "btnStartExtraction": {
+    "message": "▶ 抽出を開始",
+    "description": "Start extraction button"
+  },
+  "btnStopExtraction": {
+    "message": "⏹ 抽出を停止",
+    "description": "Stop extraction button"
+  },
+  "btnResumeExtraction": {
+    "message": "▶ 抽出を再開",
+    "description": "Resume extraction button"
+  },
+  "statusExtracting": {
+    "message": "抽出中...",
+    "description": "Extraction in progress status"
+  },
+  "contactsFound": {
+    "message": "見つかった連絡先",
+    "description": "Contacts found label"
+  },
+  "btnDownload": {
+    "message": "📥 連絡先をダウンロード",
+    "description": "Download contacts button"
+  },
+  "btnBack": {
+    "message": "← 戻る",
+    "description": "Back button"
+  },
+  "btnClear": {
+    "message": "🗑 クリア",
+    "description": "Clear data button"
+  },
+  "faqTitle": {
+    "message": "よくある質問",
+    "description": "FAQ section title"
+  },
+  "faqHowItWorks": {
+    "message": "どのように機能しますか？",
+    "description": "FAQ question - How it works"
+  },
+  "faqHowItWorksAnswer": {
+    "message": "拡張機能がチャットリストを自動的にスクロールし、名前と電話番号をローカルで抽出します。",
+    "description": "FAQ answer - How it works"
+  },
+  "faqIsSafe": {
+    "message": "安全ですか？",
+    "description": "FAQ question - Is it safe"
+  },
+  "faqIsSafeAnswer": {
+    "message": "はい、すべてはお使いのコンピュータで行われます。サーバーにデータを送信することはありません。",
+    "description": "FAQ answer - Is it safe"
+  },
+  "faqWhyStopped": {
+    "message": "なぜ停止しましたか？",
+    "description": "FAQ question - Why stopped"
+  },
+  "faqWhyStoppedAnswer": {
+    "message": "リストの最後に達すると停止します。いつでも再開できます。",
+    "description": "FAQ answer - Why stopped"
+  },
+  "faqExportIphone": {
+    "message": "iPhoneにエクスポートするには？",
+    "description": "FAQ question - Export to iPhone"
+  },
+  "faqExportIphoneAnswer": {
+    "message": "VCard (.vcf)形式を使用し、iPhoneで開いて連絡先をインポートします。",
+    "description": "FAQ answer - Export to iPhone"
+  },
+  "tipKeepOpen": {
+    "message": "💡 <strong>ヒント：</strong>抽出中はWhatsApp Webを開いたままにしてください。",
+    "description": "Tip about keeping WhatsApp open"
+  },
+  "statusResuming": {
+    "message": "再開中... $1件の連絡先を保存済み",
+    "description": "Resuming status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusAutoSaving": {
+    "message": "(自動保存中)",
+    "description": "Auto-saving status indicator"
+  },
+  "statusSaved": {
+    "message": "(保存済み)",
+    "description": "Saved status indicator"
+  },
+  "contacts": {
+    "message": "連絡先",
+    "description": "Contacts word"
+  },
+  "noActiveTab": {
+    "message": "アクティブなタブがありません",
+    "description": "Error when no active tab"
+  },
+  "connectionFailed": {
+    "message": "接続に失敗しました",
+    "description": "Connection failed error"
+  },
+  "pleaseReloadWhatsApp": {
+    "message": "WhatsAppページを再読み込みしてください",
+    "description": "Message to reload WhatsApp"
+  },
+  "statusStarting": {
+    "message": "抽出を開始中...",
+    "description": "Starting extraction status"
+  },
+  "statusStartingShort": {
+    "message": "開始中...",
+    "description": "Short starting status"
+  },
+  "errorStarting": {
+    "message": "開始エラー。WhatsAppページを再読み込みしてください。",
+    "description": "Error starting extraction"
+  },
+  "statusStopping": {
+    "message": "停止中...",
+    "description": "Stopping status"
+  },
+  "statusPaused": {
+    "message": "一時停止：$1件の連絡先を保存済み",
+    "description": "Paused status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusResumingFrom": {
+    "message": "$1件の連絡先から再開中...",
+    "description": "Resuming from X contacts",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "confirmClear": {
+    "message": "保存されたすべての連絡先を削除してもよろしいですか？",
+    "description": "Confirm clear data dialog"
+  },
+  "statusReady": {
+    "message": "準備完了",
+    "description": "Ready status"
+  },
+  "statusCleared": {
+    "message": "データがクリアされました。新しい抽出の準備ができました。",
+    "description": "Data cleared message"
+  },
+  "noContactsToDownload": {
+    "message": "ダウンロードする連絡先がありません",
+    "description": "No contacts to download alert"
+  },
+  "csvHeaderName": {
+    "message": "名前",
+    "description": "CSV header - Name"
+  },
+  "csvHeaderPhone": {
+    "message": "電話",
+    "description": "CSV header - Phone"
+  },
+  "csvHeaderLastMessage": {
+    "message": "最後のメッセージ",
+    "description": "CSV header - Last Message"
+  },
+  "unknownContact": {
+    "message": "不明",
+    "description": "Unknown contact name for vCard"
+  },
+  "statusScanning": {
+    "message": "スキャン中...",
+    "description": "Scanning status in content script"
+  },
+  "errorChatListNotFound": {
+    "message": "エラー：チャットリストが見つかりません",
+    "description": "Error when chat list not found"
+  },
+  "statusCompleted": {
+    "message": "✓ 完了：$1件の連絡先",
+    "description": "Completed status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "progressContacts": {
+    "message": "📁 $1件の連絡先 $2",
+    "description": "Progress info with contact count and status",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      },
+      "2": {
+        "content": "$2",
+        "example": "(保存済み)"
+      }
+    }
+  },
+  "whatsAppNotOpen": {
+    "message": "WhatsApp Webが開いていません",
+    "description": "WhatsApp Web is not open error"
+  },
+  "pleaseReloadWhatsAppWeb": {
+    "message": "WhatsApp Webを再読み込みしてください",
+    "description": "Please reload WhatsApp Web message"
+  },
+  "errorStartingShort": {
+    "message": "開始エラー。WhatsApp Webを再読み込みしてください。",
+    "description": "Short error starting message"
+  }
+}
+
+

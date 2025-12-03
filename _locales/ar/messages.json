@@ -1,0 +1,266 @@
+{
+  "extensionName": {
+    "message": "Snatch WhatsApp Exporter",
+    "description": "Extension name shown in browser"
+  },
+  "extensionDescription": {
+    "message": "تصدير جهات اتصال WhatsApp Web إلى CSV أو Excel أو JSON أو VCard. استخراج الأسماء والهواتف والرسائل بسرعة وأمان.",
+    "description": "Extension description shown in browser"
+  },
+  "appTitle": {
+    "message": "Snatch Exporter",
+    "description": "App title in header"
+  },
+  "proBadge": {
+    "message": "PRO",
+    "description": "PRO badge text"
+  },
+  "navHome": {
+    "message": "الرئيسية",
+    "description": "Home navigation tooltip"
+  },
+  "navHelp": {
+    "message": "مساعدة",
+    "description": "Help navigation tooltip"
+  },
+  "errorWhatsAppNotDetected": {
+    "message": "لم يتم الكشف عن WhatsApp",
+    "description": "Error title when WhatsApp is not detected"
+  },
+  "errorOpenWhatsApp": {
+    "message": "يرجى فتح WhatsApp Web لبدء استخراج جهات الاتصال.",
+    "description": "Error message when WhatsApp is not detected"
+  },
+  "btnOpenWhatsApp": {
+    "message": "🔄 فتح WhatsApp Web",
+    "description": "Button to open WhatsApp Web"
+  },
+  "readyToExtract": {
+    "message": "جاهز للاستخراج",
+    "description": "Ready state title"
+  },
+  "readyDescription": {
+    "message": "تم الكشف عن WhatsApp Web. انقر لبدء فحص جهات الاتصال الخاصة بك.",
+    "description": "Ready state description"
+  },
+  "btnStartExtraction": {
+    "message": "▶ بدء الاستخراج",
+    "description": "Start extraction button"
+  },
+  "btnStopExtraction": {
+    "message": "⏹ إيقاف الاستخراج",
+    "description": "Stop extraction button"
+  },
+  "btnResumeExtraction": {
+    "message": "▶ استئناف الاستخراج",
+    "description": "Resume extraction button"
+  },
+  "statusExtracting": {
+    "message": "جاري الاستخراج...",
+    "description": "Extraction in progress status"
+  },
+  "contactsFound": {
+    "message": "جهات الاتصال الموجودة",
+    "description": "Contacts found label"
+  },
+  "btnDownload": {
+    "message": "📥 تحميل جهات الاتصال",
+    "description": "Download contacts button"
+  },
+  "btnBack": {
+    "message": "← رجوع",
+    "description": "Back button"
+  },
+  "btnClear": {
+    "message": "🗑 مسح",
+    "description": "Clear data button"
+  },
+  "faqTitle": {
+    "message": "الأسئلة الشائعة",
+    "description": "FAQ section title"
+  },
+  "faqHowItWorks": {
+    "message": "كيف يعمل؟",
+    "description": "FAQ question - How it works"
+  },
+  "faqHowItWorksAnswer": {
+    "message": "يقوم الامتداد بالتمرير تلقائيًا عبر قائمة الدردشات واستخراج الأسماء وأرقام الهواتف محليًا.",
+    "description": "FAQ answer - How it works"
+  },
+  "faqIsSafe": {
+    "message": "هل هو آمن؟",
+    "description": "FAQ question - Is it safe"
+  },
+  "faqIsSafeAnswer": {
+    "message": "نعم، كل شيء يحدث على جهاز الكمبيوتر الخاص بك. لا نرسل أي بيانات إلى أي خادم.",
+    "description": "FAQ answer - Is it safe"
+  },
+  "faqWhyStopped": {
+    "message": "لماذا توقف؟",
+    "description": "FAQ question - Why stopped"
+  },
+  "faqWhyStoppedAnswer": {
+    "message": "يتوقف عند الوصول إلى نهاية القائمة. يمكنك الاستئناف في أي وقت.",
+    "description": "FAQ answer - Why stopped"
+  },
+  "faqExportIphone": {
+    "message": "كيفية التصدير إلى iPhone؟",
+    "description": "FAQ question - Export to iPhone"
+  },
+  "faqExportIphoneAnswer": {
+    "message": "استخدم تنسيق VCard (.vcf) وافتحه على iPhone لاستيراد جهات الاتصال.",
+    "description": "FAQ answer - Export to iPhone"
+  },
+  "tipKeepOpen": {
+    "message": "💡 <strong>نصيحة:</strong> أبقِ WhatsApp Web مفتوحًا أثناء الاستخراج.",
+    "description": "Tip about keeping WhatsApp open"
+  },
+  "statusResuming": {
+    "message": "جاري الاستئناف... تم حفظ $1 جهة اتصال",
+    "description": "Resuming status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusAutoSaving": {
+    "message": "(حفظ تلقائي)",
+    "description": "Auto-saving status indicator"
+  },
+  "statusSaved": {
+    "message": "(محفوظ)",
+    "description": "Saved status indicator"
+  },
+  "contacts": {
+    "message": "جهات اتصال",
+    "description": "Contacts word"
+  },
+  "noActiveTab": {
+    "message": "لا توجد علامة تبويب نشطة",
+    "description": "Error when no active tab"
+  },
+  "connectionFailed": {
+    "message": "فشل الاتصال",
+    "description": "Connection failed error"
+  },
+  "pleaseReloadWhatsApp": {
+    "message": "يرجى إعادة تحميل صفحة WhatsApp",
+    "description": "Message to reload WhatsApp"
+  },
+  "statusStarting": {
+    "message": "جاري بدء الاستخراج...",
+    "description": "Starting extraction status"
+  },
+  "statusStartingShort": {
+    "message": "جاري البدء...",
+    "description": "Short starting status"
+  },
+  "errorStarting": {
+    "message": "خطأ في البدء. أعد تحميل صفحة WhatsApp.",
+    "description": "Error starting extraction"
+  },
+  "statusStopping": {
+    "message": "جاري الإيقاف...",
+    "description": "Stopping status"
+  },
+  "statusPaused": {
+    "message": "متوقف مؤقتًا: تم حفظ $1 جهة اتصال",
+    "description": "Paused status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusResumingFrom": {
+    "message": "جاري الاستئناف من $1 جهة اتصال...",
+    "description": "Resuming from X contacts",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "confirmClear": {
+    "message": "هل أنت متأكد أنك تريد حذف جميع جهات الاتصال المحفوظة؟",
+    "description": "Confirm clear data dialog"
+  },
+  "statusReady": {
+    "message": "جاهز",
+    "description": "Ready status"
+  },
+  "statusCleared": {
+    "message": "تم مسح البيانات. جاهز لاستخراج جديد.",
+    "description": "Data cleared message"
+  },
+  "noContactsToDownload": {
+    "message": "لا توجد جهات اتصال للتحميل",
+    "description": "No contacts to download alert"
+  },
+  "csvHeaderName": {
+    "message": "الاسم",
+    "description": "CSV header - Name"
+  },
+  "csvHeaderPhone": {
+    "message": "الهاتف",
+    "description": "CSV header - Phone"
+  },
+  "csvHeaderLastMessage": {
+    "message": "آخر رسالة",
+    "description": "CSV header - Last Message"
+  },
+  "unknownContact": {
+    "message": "غير معروف",
+    "description": "Unknown contact name for vCard"
+  },
+  "statusScanning": {
+    "message": "جاري الفحص...",
+    "description": "Scanning status in content script"
+  },
+  "errorChatListNotFound": {
+    "message": "خطأ: لم يتم العثور على قائمة الدردشات",
+    "description": "Error when chat list not found"
+  },
+  "statusCompleted": {
+    "message": "✓ اكتمل: $1 جهة اتصال",
+    "description": "Completed status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "progressContacts": {
+    "message": "📁 $1 جهة اتصال $2",
+    "description": "Progress info with contact count and status",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      },
+      "2": {
+        "content": "$2",
+        "example": "(محفوظ)"
+      }
+    }
+  },
+  "whatsAppNotOpen": {
+    "message": "WhatsApp Web غير مفتوح",
+    "description": "WhatsApp Web is not open error"
+  },
+  "pleaseReloadWhatsAppWeb": {
+    "message": "يرجى إعادة تحميل WhatsApp Web",
+    "description": "Please reload WhatsApp Web message"
+  },
+  "errorStartingShort": {
+    "message": "خطأ في البدء. أعد تحميل WhatsApp Web.",
+    "description": "Short error starting message"
+  }
+}
+
+

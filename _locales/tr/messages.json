@@ -1,0 +1,266 @@
+{
+  "extensionName": {
+    "message": "Snatch WhatsApp Exporter",
+    "description": "Extension name shown in browser"
+  },
+  "extensionDescription": {
+    "message": "WhatsApp Web kişilerini CSV, Excel, JSON veya VCard'a aktarın. İsimleri, telefonları ve mesajları hızlı ve güvenli bir şekilde çıkarın.",
+    "description": "Extension description shown in browser"
+  },
+  "appTitle": {
+    "message": "Snatch Exporter",
+    "description": "App title in header"
+  },
+  "proBadge": {
+    "message": "PRO",
+    "description": "PRO badge text"
+  },
+  "navHome": {
+    "message": "Ana Sayfa",
+    "description": "Home navigation tooltip"
+  },
+  "navHelp": {
+    "message": "Yardım",
+    "description": "Help navigation tooltip"
+  },
+  "errorWhatsAppNotDetected": {
+    "message": "WhatsApp Algılanmadı",
+    "description": "Error title when WhatsApp is not detected"
+  },
+  "errorOpenWhatsApp": {
+    "message": "Kişileri çıkarmaya başlamak için lütfen WhatsApp Web'i açın.",
+    "description": "Error message when WhatsApp is not detected"
+  },
+  "btnOpenWhatsApp": {
+    "message": "🔄 WhatsApp Web'i Aç",
+    "description": "Button to open WhatsApp Web"
+  },
+  "readyToExtract": {
+    "message": "Çıkarmaya Hazır",
+    "description": "Ready state title"
+  },
+  "readyDescription": {
+    "message": "WhatsApp Web algılandı. Kişilerinizi taramaya başlamak için tıklayın.",
+    "description": "Ready state description"
+  },
+  "btnStartExtraction": {
+    "message": "▶ Çıkarmayı Başlat",
+    "description": "Start extraction button"
+  },
+  "btnStopExtraction": {
+    "message": "⏹ Çıkarmayı Durdur",
+    "description": "Stop extraction button"
+  },
+  "btnResumeExtraction": {
+    "message": "▶ Çıkarmaya Devam Et",
+    "description": "Resume extraction button"
+  },
+  "statusExtracting": {
+    "message": "Çıkarılıyor...",
+    "description": "Extraction in progress status"
+  },
+  "contactsFound": {
+    "message": "Bulunan Kişiler",
+    "description": "Contacts found label"
+  },
+  "btnDownload": {
+    "message": "📥 Kişileri İndir",
+    "description": "Download contacts button"
+  },
+  "btnBack": {
+    "message": "← Geri",
+    "description": "Back button"
+  },
+  "btnClear": {
+    "message": "🗑 Temizle",
+    "description": "Clear data button"
+  },
+  "faqTitle": {
+    "message": "Sık Sorulan Sorular",
+    "description": "FAQ section title"
+  },
+  "faqHowItWorks": {
+    "message": "Nasıl çalışır?",
+    "description": "FAQ question - How it works"
+  },
+  "faqHowItWorksAnswer": {
+    "message": "Uzantı, sohbet listenizi otomatik olarak kaydırır ve isimleri ile telefon numaralarını yerel olarak çıkarır.",
+    "description": "FAQ answer - How it works"
+  },
+  "faqIsSafe": {
+    "message": "Güvenli mi?",
+    "description": "FAQ question - Is it safe"
+  },
+  "faqIsSafeAnswer": {
+    "message": "Evet, her şey bilgisayarınızda gerçekleşir. Hiçbir sunucuya veri göndermiyoruz.",
+    "description": "FAQ answer - Is it safe"
+  },
+  "faqWhyStopped": {
+    "message": "Neden durdu?",
+    "description": "FAQ question - Why stopped"
+  },
+  "faqWhyStoppedAnswer": {
+    "message": "Listenin sonuna ulaşıldığında durur. İstediğiniz zaman devam edebilirsiniz.",
+    "description": "FAQ answer - Why stopped"
+  },
+  "faqExportIphone": {
+    "message": "iPhone'a nasıl aktarılır?",
+    "description": "FAQ question - Export to iPhone"
+  },
+  "faqExportIphoneAnswer": {
+    "message": "VCard (.vcf) formatını kullanın ve kişileri içe aktarmak için iPhone'unuzda açın.",
+    "description": "FAQ answer - Export to iPhone"
+  },
+  "tipKeepOpen": {
+    "message": "💡 <strong>İpucu:</strong> Çıkarma sırasında WhatsApp Web'i açık tutun.",
+    "description": "Tip about keeping WhatsApp open"
+  },
+  "statusResuming": {
+    "message": "Devam ediliyor... $1 kişi kaydedildi",
+    "description": "Resuming status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusAutoSaving": {
+    "message": "(otomatik kaydetme)",
+    "description": "Auto-saving status indicator"
+  },
+  "statusSaved": {
+    "message": "(kaydedildi)",
+    "description": "Saved status indicator"
+  },
+  "contacts": {
+    "message": "kişi",
+    "description": "Contacts word"
+  },
+  "noActiveTab": {
+    "message": "Aktif sekme yok",
+    "description": "Error when no active tab"
+  },
+  "connectionFailed": {
+    "message": "Bağlantı başarısız",
+    "description": "Connection failed error"
+  },
+  "pleaseReloadWhatsApp": {
+    "message": "Lütfen WhatsApp sayfasını yenileyin",
+    "description": "Message to reload WhatsApp"
+  },
+  "statusStarting": {
+    "message": "Çıkarma başlatılıyor...",
+    "description": "Starting extraction status"
+  },
+  "statusStartingShort": {
+    "message": "Başlatılıyor...",
+    "description": "Short starting status"
+  },
+  "errorStarting": {
+    "message": "Başlatma hatası. WhatsApp sayfasını yenileyin.",
+    "description": "Error starting extraction"
+  },
+  "statusStopping": {
+    "message": "Durduruluyor...",
+    "description": "Stopping status"
+  },
+  "statusPaused": {
+    "message": "Duraklatıldı: $1 kişi kaydedildi",
+    "description": "Paused status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusResumingFrom": {
+    "message": "$1 kişiden devam ediliyor...",
+    "description": "Resuming from X contacts",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "confirmClear": {
+    "message": "Tüm kayıtlı kişileri silmek istediğinizden emin misiniz?",
+    "description": "Confirm clear data dialog"
+  },
+  "statusReady": {
+    "message": "Hazır",
+    "description": "Ready status"
+  },
+  "statusCleared": {
+    "message": "Veriler silindi. Yeni çıkarma için hazır.",
+    "description": "Data cleared message"
+  },
+  "noContactsToDownload": {
+    "message": "İndirilecek kişi yok",
+    "description": "No contacts to download alert"
+  },
+  "csvHeaderName": {
+    "message": "İsim",
+    "description": "CSV header - Name"
+  },
+  "csvHeaderPhone": {
+    "message": "Telefon",
+    "description": "CSV header - Phone"
+  },
+  "csvHeaderLastMessage": {
+    "message": "Son Mesaj",
+    "description": "CSV header - Last Message"
+  },
+  "unknownContact": {
+    "message": "Bilinmiyor",
+    "description": "Unknown contact name for vCard"
+  },
+  "statusScanning": {
+    "message": "Taranıyor...",
+    "description": "Scanning status in content script"
+  },
+  "errorChatListNotFound": {
+    "message": "Hata: Sohbet listesi bulunamadı",
+    "description": "Error when chat list not found"
+  },
+  "statusCompleted": {
+    "message": "✓ Tamamlandı: $1 kişi",
+    "description": "Completed status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "progressContacts": {
+    "message": "📁 $1 kişi $2",
+    "description": "Progress info with contact count and status",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      },
+      "2": {
+        "content": "$2",
+        "example": "(kaydedildi)"
+      }
+    }
+  },
+  "whatsAppNotOpen": {
+    "message": "WhatsApp Web açık değil",
+    "description": "WhatsApp Web is not open error"
+  },
+  "pleaseReloadWhatsAppWeb": {
+    "message": "Lütfen WhatsApp Web'i yenileyin",
+    "description": "Please reload WhatsApp Web message"
+  },
+  "errorStartingShort": {
+    "message": "Başlatma hatası. WhatsApp Web'i yenileyin.",
+    "description": "Short error starting message"
+  }
+}
+
+

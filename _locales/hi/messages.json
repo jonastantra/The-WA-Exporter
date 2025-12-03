@@ -1,0 +1,266 @@
+{
+  "extensionName": {
+    "message": "Snatch WhatsApp Exporter",
+    "description": "Extension name shown in browser"
+  },
+  "extensionDescription": {
+    "message": "WhatsApp Web संपर्कों को CSV, Excel, JSON या VCard में निर्यात करें। नाम, फ़ोन और संदेशों को तेज़ी और सुरक्षित रूप से निकालें।",
+    "description": "Extension description shown in browser"
+  },
+  "appTitle": {
+    "message": "Snatch Exporter",
+    "description": "App title in header"
+  },
+  "proBadge": {
+    "message": "PRO",
+    "description": "PRO badge text"
+  },
+  "navHome": {
+    "message": "होम",
+    "description": "Home navigation tooltip"
+  },
+  "navHelp": {
+    "message": "सहायता",
+    "description": "Help navigation tooltip"
+  },
+  "errorWhatsAppNotDetected": {
+    "message": "WhatsApp नहीं मिला",
+    "description": "Error title when WhatsApp is not detected"
+  },
+  "errorOpenWhatsApp": {
+    "message": "संपर्क निकालना शुरू करने के लिए कृपया WhatsApp Web खोलें।",
+    "description": "Error message when WhatsApp is not detected"
+  },
+  "btnOpenWhatsApp": {
+    "message": "🔄 WhatsApp Web खोलें",
+    "description": "Button to open WhatsApp Web"
+  },
+  "readyToExtract": {
+    "message": "निकालने के लिए तैयार",
+    "description": "Ready state title"
+  },
+  "readyDescription": {
+    "message": "WhatsApp Web मिल गया। अपने संपर्कों को स्कैन करना शुरू करने के लिए क्लिक करें।",
+    "description": "Ready state description"
+  },
+  "btnStartExtraction": {
+    "message": "▶ निकालना शुरू करें",
+    "description": "Start extraction button"
+  },
+  "btnStopExtraction": {
+    "message": "⏹ निकालना रोकें",
+    "description": "Stop extraction button"
+  },
+  "btnResumeExtraction": {
+    "message": "▶ निकालना जारी रखें",
+    "description": "Resume extraction button"
+  },
+  "statusExtracting": {
+    "message": "निकाला जा रहा है...",
+    "description": "Extraction in progress status"
+  },
+  "contactsFound": {
+    "message": "संपर्क मिले",
+    "description": "Contacts found label"
+  },
+  "btnDownload": {
+    "message": "📥 संपर्क डाउनलोड करें",
+    "description": "Download contacts button"
+  },
+  "btnBack": {
+    "message": "← वापस",
+    "description": "Back button"
+  },
+  "btnClear": {
+    "message": "🗑 मिटाएं",
+    "description": "Clear data button"
+  },
+  "faqTitle": {
+    "message": "अक्सर पूछे जाने वाले प्रश्न",
+    "description": "FAQ section title"
+  },
+  "faqHowItWorks": {
+    "message": "यह कैसे काम करता है?",
+    "description": "FAQ question - How it works"
+  },
+  "faqHowItWorksAnswer": {
+    "message": "एक्सटेंशन आपकी चैट सूची में स्वचालित रूप से स्क्रॉल करता है और स्थानीय रूप से नाम और फ़ोन नंबर निकालता है।",
+    "description": "FAQ answer - How it works"
+  },
+  "faqIsSafe": {
+    "message": "क्या यह सुरक्षित है?",
+    "description": "FAQ question - Is it safe"
+  },
+  "faqIsSafeAnswer": {
+    "message": "हाँ, सब कुछ आपके कंप्यूटर पर होता है। हम किसी सर्वर को डेटा नहीं भेजते।",
+    "description": "FAQ answer - Is it safe"
+  },
+  "faqWhyStopped": {
+    "message": "यह क्यों रुक गया?",
+    "description": "FAQ question - Why stopped"
+  },
+  "faqWhyStoppedAnswer": {
+    "message": "सूची के अंत में पहुँचने पर रुक जाता है। आप किसी भी समय जारी रख सकते हैं।",
+    "description": "FAQ answer - Why stopped"
+  },
+  "faqExportIphone": {
+    "message": "iPhone में कैसे निर्यात करें?",
+    "description": "FAQ question - Export to iPhone"
+  },
+  "faqExportIphoneAnswer": {
+    "message": "VCard (.vcf) प्रारूप का उपयोग करें और संपर्कों को आयात करने के लिए इसे अपने iPhone पर खोलें।",
+    "description": "FAQ answer - Export to iPhone"
+  },
+  "tipKeepOpen": {
+    "message": "💡 <strong>टिप:</strong> निकालने के दौरान WhatsApp Web खुला रखें।",
+    "description": "Tip about keeping WhatsApp open"
+  },
+  "statusResuming": {
+    "message": "जारी रखा जा रहा है... $1 संपर्क सहेजे गए",
+    "description": "Resuming status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusAutoSaving": {
+    "message": "(स्वतः सहेजा जा रहा है)",
+    "description": "Auto-saving status indicator"
+  },
+  "statusSaved": {
+    "message": "(सहेजा गया)",
+    "description": "Saved status indicator"
+  },
+  "contacts": {
+    "message": "संपर्क",
+    "description": "Contacts word"
+  },
+  "noActiveTab": {
+    "message": "कोई सक्रिय टैब नहीं",
+    "description": "Error when no active tab"
+  },
+  "connectionFailed": {
+    "message": "कनेक्शन विफल",
+    "description": "Connection failed error"
+  },
+  "pleaseReloadWhatsApp": {
+    "message": "कृपया WhatsApp पेज रीलोड करें",
+    "description": "Message to reload WhatsApp"
+  },
+  "statusStarting": {
+    "message": "निकालना शुरू हो रहा है...",
+    "description": "Starting extraction status"
+  },
+  "statusStartingShort": {
+    "message": "शुरू हो रहा है...",
+    "description": "Short starting status"
+  },
+  "errorStarting": {
+    "message": "शुरू करने में त्रुटि। WhatsApp पेज रीलोड करें।",
+    "description": "Error starting extraction"
+  },
+  "statusStopping": {
+    "message": "रोका जा रहा है...",
+    "description": "Stopping status"
+  },
+  "statusPaused": {
+    "message": "रुका हुआ: $1 संपर्क सहेजे गए",
+    "description": "Paused status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "statusResumingFrom": {
+    "message": "$1 संपर्कों से जारी रखा जा रहा है...",
+    "description": "Resuming from X contacts",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "confirmClear": {
+    "message": "क्या आप वाकई सभी सहेजे गए संपर्कों को हटाना चाहते हैं?",
+    "description": "Confirm clear data dialog"
+  },
+  "statusReady": {
+    "message": "तैयार",
+    "description": "Ready status"
+  },
+  "statusCleared": {
+    "message": "डेटा मिटा दिया गया। नए निकालने के लिए तैयार।",
+    "description": "Data cleared message"
+  },
+  "noContactsToDownload": {
+    "message": "डाउनलोड करने के लिए कोई संपर्क नहीं",
+    "description": "No contacts to download alert"
+  },
+  "csvHeaderName": {
+    "message": "नाम",
+    "description": "CSV header - Name"
+  },
+  "csvHeaderPhone": {
+    "message": "फ़ोन",
+    "description": "CSV header - Phone"
+  },
+  "csvHeaderLastMessage": {
+    "message": "अंतिम संदेश",
+    "description": "CSV header - Last Message"
+  },
+  "unknownContact": {
+    "message": "अज्ञात",
+    "description": "Unknown contact name for vCard"
+  },
+  "statusScanning": {
+    "message": "स्कैन हो रहा है...",
+    "description": "Scanning status in content script"
+  },
+  "errorChatListNotFound": {
+    "message": "त्रुटि: चैट सूची नहीं मिली",
+    "description": "Error when chat list not found"
+  },
+  "statusCompleted": {
+    "message": "✓ पूर्ण: $1 संपर्क",
+    "description": "Completed status with contact count",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      }
+    }
+  },
+  "progressContacts": {
+    "message": "📁 $1 संपर्क $2",
+    "description": "Progress info with contact count and status",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "150"
+      },
+      "2": {
+        "content": "$2",
+        "example": "(सहेजा गया)"
+      }
+    }
+  },
+  "whatsAppNotOpen": {
+    "message": "WhatsApp Web खुला नहीं है",
+    "description": "WhatsApp Web is not open error"
+  },
+  "pleaseReloadWhatsAppWeb": {
+    "message": "कृपया WhatsApp Web रीलोड करें",
+    "description": "Please reload WhatsApp Web message"
+  },
+  "errorStartingShort": {
+    "message": "शुरू करने में त्रुटि। WhatsApp Web रीलोड करें।",
+    "description": "Short error starting message"
+  }
+}
+
+
