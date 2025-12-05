@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Versión-1.3-green.svg" alt="Versión">
+  <img src="https://img.shields.io/badge/Versión-2.1-green.svg" alt="Versión">
   <img src="https://img.shields.io/badge/Manifest-V3-blue.svg" alt="Manifest V3">
   <img src="https://img.shields.io/badge/Plataforma-Chrome-yellow.svg" alt="Chrome">
   <img src="https://img.shields.io/badge/Licencia-MIT-orange.svg" alt="Licencia">
@@ -197,8 +197,22 @@ Por cada contacto o chat, la extensión obtiene:
 
 ## 📝 Changelog
 
-### v1.3 (Actual)
+### v2.1 (Actual)
 - Selectores actualizados para WhatsApp Web 2024-2025
+- Mejora en la detección de contactos
+- Soporte multi-idioma mejorado (14 idiomas)
+- Corrección de errores de scroll
+- Interfaz mejorada con side panel
+- Guardado automático de progreso
+
+### v2.0
+- Migración completa a Manifest V3
+- Implementación de side panel
+- Mejoras en la estabilidad del servicio worker
+- Optimización de rendimiento
+
+### v1.3
+- Selectores actualizados para WhatsApp Web
 - Mejora en la detección de contactos
 - Soporte multi-idioma mejorado
 - Corrección de errores de scroll
