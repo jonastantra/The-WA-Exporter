@@ -1,4 +1,4 @@
-// background.js - Service Worker para Snatch Exporter v2.1
+// background.js - Service Worker para Snatch Exporter v2.3
 // Sistema de detección y ligado a WhatsApp Web
 
 // Production mode - disable verbose logging
@@ -140,9 +140,22 @@ async function checkWhatsAppLoaded(tabId) {
                 // Verificar múltiples elementos que indican que WhatsApp cargó
                 const paneExists = document.querySelector('#pane-side') !== null;
                 const appExists = document.querySelector('#app') !== null;
-                const sidebarExists = document.querySelector('[data-testid="chat-list"]') !== null ||
-                                     document.querySelector('div[role="grid"]') !== null;
-                return paneExists || (appExists && sidebarExists);
+                
+                // Selectores expandidos para la nueva estructura de WhatsApp
+                const chatListExists = document.querySelector('[data-testid="chat-list"]') !== null;
+                const gridExists = document.querySelector('div[role="grid"]') !== null;
+                const listExists = document.querySelector('div[role="list"]') !== null;
+                const listItemsExist = document.querySelectorAll('div[role="listitem"]').length > 0;
+                const rowsExist = document.querySelectorAll('div[role="row"]').length > 0;
+                const spanTitlesExist = document.querySelectorAll('span[title]').length > 3;
+                const conversationPanelExists = document.querySelector('[data-testid="conversation-panel-wrapper"]') !== null ||
+                                                document.querySelector('[data-testid="default-user"]') !== null;
+                
+                // WhatsApp cargó si hay panel lateral O si hay chats visibles
+                const hasChatIndicators = chatListExists || gridExists || listExists || 
+                                         listItemsExist || rowsExist || spanTitlesExist;
+                
+                return paneExists || (appExists && hasChatIndicators) || conversationPanelExists;
             }
         });
         return results[0]?.result || false;

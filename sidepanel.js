@@ -498,6 +498,12 @@ function getConnectedHTML() {
                 <button id="btnClear" class="btn-text-danger mt-4 hidden">
                     🔄 Volver a empezar
                 </button>
+
+                <button id="btnDiagnose" class="btn-secondary mt-4" style="width:100%;">
+                    🔍 Diagnosticar WhatsApp Web
+                </button>
+
+                <div id="diagnosticResults" class="diagnostic-results hidden mt-4"></div>
             </div>
 
             <!-- Page: Help -->
@@ -691,6 +697,12 @@ function attachMainAppListeners() {
         btnClear.addEventListener('click', clearAllData);
     }
 
+    // Diagnostic button
+    const btnDiagnose = document.getElementById('btnDiagnose');
+    if (btnDiagnose) {
+        btnDiagnose.addEventListener('click', runDiagnostics);
+    }
+
     // Rating system
     setupStarRating(document.getElementById('starRating'), (rating) => {
         currentRating = rating;
@@ -768,10 +780,24 @@ async function startExtraction() {
             `;
         }
 
-        // Mostrar mensaje de error
-        const errorMsg = response?.error || 'No se pudo conectar. Recarga WhatsApp Web.';
-        alert(errorMsg);
-        log('Error iniciando extracción:', errorMsg);
+        // Mostrar mensaje de error más informativo
+        const errorMsg = response?.error || 'No se pudo conectar con el script de WhatsApp Web.';
+        const diagDiv = document.getElementById('diagnosticResults');
+        if (diagDiv) {
+            diagDiv.classList.remove('hidden');
+            diagDiv.innerHTML = `
+                <div class="diag-card" style="color:var(--danger-color)">
+                    <strong>❌ ${errorMsg}</strong><br><br>
+                    <small>
+                    💡 <strong>Posibles soluciones:</strong><br>
+                    1. Recarga WhatsApp Web (Ctrl+Shift+R o F5) y vuelve a intentar<br>
+                    2. Asegúrate de estar en la vista principal de chats (no en un chat individual)<br>
+                    3. Si WhatsApp Web está en otra pestaña, cambia a ella y regresa<br>
+                    4. Prueba el botón "Diagnosticar" para más detalles
+                    </small>
+                </div>
+            `;
+        }
     }
 }
 
@@ -791,6 +817,113 @@ async function stopExtraction() {
     const count = (data.extractionCount || 0) + 1;
     await chrome.storage.local.set({ extractionCount: count });
     checkAndShowRatingModal(count);
+}
+
+async function runDiagnostics() {
+    const btnDiagnose = document.getElementById('btnDiagnose');
+    const resultsDiv = document.getElementById('diagnosticResults');
+
+    if (btnDiagnose) {
+        btnDiagnose.disabled = true;
+        btnDiagnose.textContent = '⏳ Ejecutando diagnóstico...';
+    }
+
+    if (resultsDiv) {
+        resultsDiv.classList.remove('hidden');
+        resultsDiv.innerHTML = '<div class="mini-spinner"></div> Analizando WhatsApp Web...';
+    }
+
+    try {
+        // Ejecutar diagnóstico en el content script
+        const response = await sendMessageToContent({ action: 'RUN_DIAGNOSTICS' });
+
+        if (response && response.contentScriptLoaded) {
+            // Capturar también el snapshot completo
+            const snapshot = await sendMessageToContent({ action: 'CAPTURE_DOM_SNAPSHOT' });
+
+            let html = '<div class="diag-card">';
+            html += '<h4>📊 Resultados del Diagnóstico</h4>';
+
+            // Estado general
+            html += `<p>WhatsApp Web: ${response.whatsappDetected ? '✅ Detectado' : '❌ No detectado'}</p>`;
+            html += `<p>Contenedor chats: ${response.containerFound ? '✅ Encontrado' : '❌ No encontrado'}</p>`;
+
+            // Container details
+            if (response.containerDetails) {
+                const cd = response.containerDetails;
+                html += '<hr><strong>Contenedor:</strong><br>';
+                html += `<small>Tag: ${cd.tagName}, ID: ${cd.id}, Role: ${cd.role}</small><br>`;
+                html += `<small>testid: ${cd.testId}, Hijos: ${cd.childrenCount}</small><br>`;
+                html += `<small>scroll: ${cd.scrollHeight}px / ${cd.clientHeight}px = ${cd.isScrollable ? 'Scrollable ✅' : 'NO scrollable ❌'}</small>`;
+            }
+
+            // Selector dinámico
+            if (response.discoveredSelector) {
+                html += '<hr><strong>Selector descubierto:</strong><br>';
+                html += `<code>${response.discoveredSelector.selector}</code><br>`;
+                html += `<small>${response.discoveredSelector.total} elementos, ${response.discoveredSelector.valid} válidos</small>`;
+            }
+
+            // Chats visibles
+            html += `<hr><strong>Chats visibles:</strong> ${response.chatsVisible}`;
+
+            // Snapshot
+            if (snapshot && snapshot.availableSelectors) {
+                html += '<hr><strong>Selectores activos:</strong><br><small>';
+                const sel = snapshot.availableSelectors;
+                if (sel['#pane-side']?.found) html += '✅ #pane-side<br>';
+                if (sel['div[role="listitem"]']?.count > 0) html += `✅ role=listitem (${sel['div[role="listitem"]'].count})<br>`;
+                if (sel['div[role="row"]']?.count > 0) html += `✅ role=row (${sel['div[role="row"]'].count})<br>`;
+                if (sel['div[role="button"]']?.count > 0) html += `✅ role=button (${sel['div[role="button"]'].count})<br>`;
+                if (sel['span[title]']?.count > 0) html += `✅ span[title] (${sel['span[title]'].count})<br>`;
+                if (sel['div._ak8l']?.count > 0) html += `⚠️ _ak8l legacy (${sel['div._ak8l'].count})<br>`;
+                if (sel['div.x1iyjqo2']?.count > 0) html += `✅ x1iyjqo2 nueva (${sel['div.x1iyjqo2'].count})<br>`;
+                html += '</small>';
+            }
+
+            // Errores
+            if (response.errors && response.errors.length > 0) {
+                html += '<hr><strong>⚠️ Errores detectados:</strong><br>';
+                response.errors.forEach(e => {
+                    html += `<small style="color:var(--danger-color)">• ${e}</small><br>`;
+                });
+            }
+
+            // Consejos
+            if (!response.containerFound) {
+                html += '<hr><strong>💡 Consejo:</strong><br><small>';
+                html += '1. Asegúrate de estar en la vista principal de chats<br>';
+                html += '2. Haz scroll manual en la lista de chats<br>';
+                html += '3. Recarga WhatsApp Web (Ctrl+Shift+R)<br>';
+                html += '4. Vuelve a intentar';
+                html += '</small>';
+            }
+
+            html += '</div>';
+
+            html += '<div class="diag-card" style="margin-top:8px">';
+            html += '<strong>📋 Comandos de consola (F12):</strong><br>';
+            html += '<small><code>window.snatchExporter.runDiagnostics()</code> - Diagnóstico detallado</small><br>';
+            html += '<small><code>window.snatchExporter.captureFullDOMSnapshot()</code> - Snapshot completo</small><br>';
+            html += '<small><code>window.snatchExporter.discoverChatRowSelector(container)</code> - Encontrar selector</small>';
+            html += '</div>';
+
+            if (resultsDiv) resultsDiv.innerHTML = html;
+        } else {
+            if (resultsDiv) {
+                resultsDiv.innerHTML = '<div class="diag-card" style="color:var(--danger-color)">❌ No se pudo conectar con WhatsApp Web. Recarga la página e inténtalo de nuevo.</div>';
+            }
+        }
+    } catch (e) {
+        if (resultsDiv) {
+            resultsDiv.innerHTML = `<div class="diag-card" style="color:var(--danger-color)">❌ Error: ${e.message}</div>`;
+        }
+    } finally {
+        if (btnDiagnose) {
+            btnDiagnose.disabled = false;
+            btnDiagnose.textContent = '🔍 Diagnosticar WhatsApp Web';
+        }
+    }
 }
 
 async function clearAllData() {

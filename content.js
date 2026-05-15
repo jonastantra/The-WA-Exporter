@@ -1,7 +1,7 @@
-// Content Script for Snatch WhatsApp Exporter v2.2
-// Versión simplificada y robusta - Diciembre 2025
+// Content Script for Snatch WhatsApp Exporter v2.3
+// Versión con selectores dinámicos - Mayo 2026
 
-console.log('🟢 Snatch Exporter: Content script cargado v2.2');
+console.log('🟢 Snatch Exporter: Content script cargado v2.3');
 
 // ========================================
 // Variables Globales
@@ -47,6 +47,48 @@ const CHATLIST_ARIA_LABELS = [
 ];
 
 const NORMALIZED_ARIA_LABELS = CHATLIST_ARIA_LABELS.map(label => normalizeText(label));
+
+// Palabras del sistema que DEBEN filtrarse (no son contactos reales)
+const SYSTEM_SKIP_WORDS = new Set([
+    'archivados', 'archived',
+    'difusion', 'difusión', 'broadcast',
+    'estados', 'status', 'status updates',
+    'canales', 'channels', 'channel',
+    'comunidades', 'communities', 'community',
+    'novedades', 'updates',
+    'llamadas', 'calls',
+    'ajustes', 'configuración', 'settings',
+    'perfil', 'profile',
+    'nuevo chat', 'new chat', 'new group',
+    'nuevo grupo', 'new community', 'nueva comunidad',
+    'lista de difusión', 'broadcast list',
+    'mensajes destacados', 'starred messages',
+    'whatsapp', 'whatsapp web',
+    'invitar', 'invite',
+    'buscar', 'search',
+    'filtros', 'filters',
+    'no hay chats', 'no chats',
+    'tú', 'you',
+    // Labels de IA / sistema
+    'meta ai', 'meta',
+    'asistente', 'assistant'
+]);
+
+// Palabras que NUNCA son nombres de contacto (regex patterns)
+const NON_CONTACT_PATTERNS = [
+    /^\d{1,2}:\d{2}(\s*[ap]\.?\s*m\.?)?$/i,  // hora: "12:30", "2:45 PM"
+    /^\d{1,2}\/\d{1,2}\/\d{2,4}$/,             // fecha: "12/31/2024"
+    /^(ayer|yesterday|hoy|today|mañana|tomorrow)$/i,
+    /^(lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado|domingo)$/i,
+    /^(monday|tuesday|wednesday|thursday|friday|saturday|sunday)$/i,
+    /^hace\s+\d+\s+(min|minutos?|h|horas?|d|días?|dias?|semanas?)$/i,
+    /^\d+\s+(min|minutes?|h|hours?|d|days?|w|weeks?)\s+ago$/i,
+    /^en línea$|^online$/i,
+    /^escribiendo\.\.\.$|^typing\.\.\.$/i,
+    /^click para abrir|^click to open/i,
+    /^(sin nombre|unnamed|desconocido)$/i,
+    /^\+\d{1,3}\s\d+$/  // solo número sin nombre
+];
 
 // ========================================
 // FUNCIÓN PRINCIPAL: Encontrar Contenedor de Chats
@@ -251,60 +293,210 @@ function findScrollableChild(parent) {
 }
 
 // ========================================
-// FUNCIÓN: Extraer Contactos Visibles
+// DESCUBRIMIENTO DINÁMICO DE SELECTORES (v2.3)
 // ========================================
-// ========================================
-// FUNCIÓN: Extraer Contactos Visibles
-// ========================================
-function extractVisibleContacts(container) {
-    const contacts = [];
 
-    // 1. Selectores específicos conocidos (ordenados por especificidad)
-    const chatSelectors = [
+// Analiza el DOM para encontrar el selector más efectivo para filas de chat
+function discoverChatRowSelector(container) {
+    if (!container) return null;
+
+    const results = [];
+
+    // Probar selectores comunes primero
+    const selectorsToTry = [
         'div[role="listitem"]',
         'div[role="row"]',
+        'div[role="option"]',
+        'div[role="button"]',
+        'div[role="gridcell"]',
         'div[data-testid^="chat-list-item"]',
         'div[data-testid="cell-frame-container"]',
-        'div._ak8l', // Clase común para container de fila
-        'div._ak8o',
-        'div[class*="ListItem"]'
+        'div[data-testid="cell-frame"]',
+        'div[data-testid="list-item-content"]',
+        'div[data-testid*="list-item"]',
+        'div[data-testid*="chat-item"]',
+        'div[data-testid*="contact-row"]',
+        'div[data-testid*="chat-row"]',
+        'li[role="listitem"]',
+        'li[role="row"]',
+        'div[class*="ListItem"]',
+        'div[class*="list-item"]',
+        'div[class*="chat-item"]',
+        'div[class*="ChatItem"]',
+        'div[class*="contact"]',
+        // Clases legacy de WhatsApp (pueden haber cambiado)
+        'div._ak8l', 'div._ak8o', 'div._ak8k',
+        'div._ak72', 'div._ak7l', 'div._ak7m',
+        // Nuevas clases 2025-2026
+        'div.x1iyjqo2', 'div.x1n2onr6', 'div.x1i10f1l',
+        'div.x10l6tqk', 'div.xh8yej3', 'div.x78zum5',
     ];
 
-    let chatElements = [];
-
-    // Intentar selectores
-    for (const selector of chatSelectors) {
+    for (const selector of selectorsToTry) {
         const elements = container.querySelectorAll(selector);
         if (elements.length > 0) {
-            chatElements = Array.from(elements);
-            console.log(`📋 Usando selector: ${selector} (${elements.length} elementos)`);
-            break;
+            // Validar que los elementos parezcan filas de chat
+            const validCount = Array.from(elements).filter(el => looksLikeChatRow(el)).length;
+            if (validCount > 0) {
+                results.push({
+                    selector,
+                    total: elements.length,
+                    valid: validCount,
+                    score: validCount * 10 + elements.length
+                });
+            }
         }
     }
 
-    // 2. Si no hay elementos, intentar buscar hijos directos que parezcan filas
+    // Si no encontramos con selectores específicos, buscar por estructura
+    if (results.length === 0) {
+        console.log('🔍 Buscando filas por estructura DOM...');
+        // Buscar elementos hijos directos que parezcan filas
+        const children = Array.from(container.children);
+        for (const child of children) {
+            if (looksLikeChatRow(child)) {
+                // Intentar encontrar un selector que los capture
+                const tag = child.tagName.toLowerCase();
+                const roles = child.getAttribute('role');
+                const testId = child.getAttribute('data-testid');
+                const classes = Array.from(child.classList).filter(c => c.length > 1 && c.length < 20);
+
+                if (roles) {
+                    results.push({ selector: `${tag}[role="${roles}"]`, total: 0, valid: children.filter(c => looksLikeChatRow(c)).length, score: 50 });
+                    break;
+                } else if (testId) {
+                    results.push({ selector: `${tag}[data-testid="${testId}"]`, total: 0, valid: children.filter(c => looksLikeChatRow(c)).length, score: 50 });
+                    break;
+                } else if (classes.length > 0) {
+                    // Usar la clase más específica
+                    const cls = classes[0];
+                    const sel = `${tag}.${cls}`;
+                    const matchingCount = container.querySelectorAll(sel).length;
+                    results.push({ selector: sel, total: matchingCount, valid: children.filter(c => looksLikeChatRow(c)).length, score: 40 });
+                }
+            }
+        }
+    }
+
+    // Ordenar por mejor score
+    results.sort((a, b) => b.score - a.score);
+
+    if (results.length > 0) {
+        console.log(`🎯 Mejor selector encontrado: "${results[0].selector}" (${results[0].valid} filas válidas de ${results[0].total})`);
+        return results[0];
+    }
+
+    console.warn('⚠️ No se pudo descubrir un selector de filas de chat');
+    return null;
+}
+
+// Verifica si un elemento se parece a una fila de chat
+function looksLikeChatRow(element) {
+    if (!element || element.offsetHeight === 0) return false;
+
+    const h = element.offsetHeight;
+    // Altura típica de fila de chat: 60-85px (puede variar con temas)
+    if (h < 40 || h > 150) return false;
+
+    // Debe tener contenido de texto
+    const text = (element.innerText || '').trim();
+    if (text.length < 2) return false;
+
+    // Indicadores positivos de fila de chat
+    const hasSpanTitle = element.querySelector('span[title]');
+    const hasProfileImg = element.querySelector('img[src*="pps.whatsapp"]') ||
+                          element.querySelector('img[draggable="false"]');
+    const hasChatIndicators = element.querySelector(
+        '[data-testid*="cell"], [data-testid*="chat"], [data-testid*="list-item"],' +
+        '[role="listitem"], [role="row"], [role="gridcell"],' +
+        'span[dir="auto"]'
+    );
+
+    // NO debe parecer un elemento UI/decorativo
+    const textOnly = text.replace(/\s/g, '');
+    if (textOnly.length < 2) return false;
+
+    // Si tiene span[title] o imagen de perfil, es muy probable que sea fila
+    if (hasSpanTitle || hasProfileImg || hasChatIndicators) return true;
+
+    // Si tiene texto de varias líneas (nombre + mensaje), probablemente es fila
+    if (text.split('\n').filter(l => l.trim()).length >= 2) return true;
+
+    return false;
+}
+
+// Detecta elementos que NO son contactos (status bubbles, headers, etc.)
+function isNonContactElement(element) {
+    if (!element) return true;
+
+    const text = (element.innerText || '').trim().toLowerCase();
+
+    // Verificar contra palabras del sistema
+    if (SYSTEM_SKIP_WORDS.has(text)) return true;
+
+    // Verificar contra patrones de no-contacto
+    for (const pattern of NON_CONTACT_PATTERNS) {
+        if (pattern.test(text)) return true;
+    }
+
+    // Status bubbles: suelen ser más pequeños o tener estructura diferente
+    const h = element.offsetHeight;
+    if (h < 45 && !element.querySelector('span[title]')) return true;
+
+    // Elementos con iconos de cámara (status)
+    if (element.querySelector('svg[data-testid*="camera"]') ||
+        element.querySelector('svg[data-testid*="status"]') ||
+        element.querySelector('[data-testid*="status"]')) {
+        return true;
+    }
+
+    // Elementos que son solo iconos/avatares sin texto de nombre
+    if (element.querySelector('div[style*="width"]') &&
+        !element.querySelector('span[title]') &&
+        text.length < 5) {
+        return true;
+    }
+
+    // Sección headers / encabezados
+    if (element.querySelector('h1, h2, h3, h4, h5, h6')) return true;
+
+    // Elementos con solo emojis/icons
+    if (/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}●◉○◎◉●]+$/u.test(text)) return true;
+
+    return false;
+}
+function extractVisibleContacts(container) {
+    const contacts = [];
+
+    // DESCUBRIR el mejor selector dinámicamente
+    const discovered = discoverChatRowSelector(container);
+    let chatElements = [];
+
+    if (discovered && discovered.selector) {
+        chatElements = Array.from(container.querySelectorAll(discovered.selector));
+        console.log(`📋 Selector dinámico: "${discovered.selector}" → ${chatElements.length} elementos`);
+    }
+
+    // Si el descubrimiento falló, intentar fallbacks
     if (chatElements.length === 0) {
         console.log('📋 Intentando búsqueda por hijos directos...');
         const children = Array.from(container.children);
         chatElements = children.filter(child => {
             const h = child.offsetHeight;
-            // Altura típica de una fila de chat (72px), permitimos rango amplio
             return h > 40 && h < 150;
         });
     }
 
-    // 3. Fallback: buscar cualquier div con altura apropiada y texto
+    // Último recurso: búsqueda profunda
     if (chatElements.length === 0) {
         console.log('📋 Intentando búsqueda profunda de candidatos...');
         const candidates = container.querySelectorAll('div');
         chatElements = Array.from(candidates).filter(node => {
             const h = node.offsetHeight;
-            // Filtrar por altura y asegurarse que tenga algo de texto
             return h > 45 && h < 130 && node.innerText.trim().length > 0;
         });
 
-        // Filtrar anidados (quedarse con el padre más externo que cumpla)
-        // Esto evita seleccionar el contenido de la fila Y la fila misma
+        // Filtrar anidados
         chatElements = chatElements.filter(el => {
             return !chatElements.some(parent => parent !== el && parent.contains(el));
         });
@@ -312,11 +504,13 @@ function extractVisibleContacts(container) {
 
     console.log(`👥 Elementos candidatos encontrados: ${chatElements.length}`);
 
-    // Procesar elementos encontrados
+    // Procesar elementos encontrados, filtrando no-contactos
     chatElements.forEach(chat => {
         try {
-            // Verificar que el elemento sea visible (height > 0)
             if (chat.offsetHeight === 0) return;
+
+            // Filtrar elementos que NO son contactos (status, headers, etc.)
+            if (isNonContactElement(chat)) return;
 
             const contact = extractContactInfo(chat);
             if (contact && contact.name) {
@@ -342,59 +536,128 @@ function extractContactInfo(element) {
     let name = '';
     let phone = '';
 
-    // ESTRATEGIA 1: Buscar span[title] (El método más fiable)
+    // ==========================================
+    // ESTRATEGIAS MÚLTIPLES de extracción (v2.3)
+    // ==========================================
+
+    // ESTRATEGIA 1: span[title] (método más fiable)
     const titleSpan = element.querySelector('span[title]');
     if (titleSpan) {
         name = titleSpan.getAttribute('title') || titleSpan.textContent;
+        name = name.trim();
     }
 
-    // ESTRATEGIA 2: Analizar líneas de texto
+    // ESTRATEGIA 2: span[dir="auto"] con texto significativo
+    if (!name) {
+        const dirSpans = element.querySelectorAll('span[dir="auto"]');
+        for (const span of dirSpans) {
+            const spanText = (span.textContent || '').trim();
+            if (spanText.length > 1 && !/^\d{1,2}:\d{2}/.test(spanText)) {
+                name = spanText;
+                break;
+            }
+        }
+    }
+
+    // ESTRATEGIA 3: Buscar el texto más largo en un span (probablemente el nombre)
+    if (!name) {
+        const allSpans = element.querySelectorAll('span');
+        let bestSpan = null;
+        let bestLen = 0;
+        for (const span of allSpans) {
+            const t = (span.textContent || '').trim();
+            if (t.length > bestLen && t.length > 1 && !isTimeOrDateText(t)) {
+                bestSpan = t;
+                bestLen = t.length;
+            }
+        }
+        if (bestSpan) name = bestSpan;
+    }
+
+    // ESTRATEGIA 4: aria-label en el elemento o ancestro
+    if (!name) {
+        const ariaLabel = element.querySelector('[aria-label]');
+        if (ariaLabel) {
+            const label = ariaLabel.getAttribute('aria-label') || '';
+            if (label.length > 1 && !isTimeOrDateText(label)) {
+                name = label;
+            }
+        }
+    }
+
+    // ESTRATEGIA 5: data-testid con nombre
+    if (!name) {
+        const testIdEls = element.querySelectorAll('[data-testid]');
+        for (const el of testIdEls) {
+            const t = (el.textContent || '').trim();
+            if (t.length > 2 && t.length < 60 && !isTimeOrDateText(t)) {
+                name = t;
+                break;
+            }
+        }
+    }
+
+    // ESTRATEGIA 6: Analizar líneas de texto (último recurso)
     if (!name) {
         const lines = text.split('\n').map(l => l.trim()).filter(l => l);
 
-        if (lines.length > 0) {
-            // La primera línea suele ser el nombre o la hora
-            // Descartar si parece hora o fecha
-            const isTimeOrDate = /^\d{1,2}:\d{2}\s*(?:[ap]\.?\s*m\.?)?$/i.test(lines[0]) ||
-                /^(ayer|yesterday|hoy|today)$/i.test(lines[0]) ||
-                /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(lines[0]);
-
-            if (!isTimeOrDate) {
-                name = lines[0];
-            } else if (lines.length > 1) {
-                // Si la primera es hora, probamos la segunda
-                name = lines[1];
+        for (const line of lines) {
+            if (line.length > 1 && line.length < 80 && !isTimeOrDateText(line)) {
+                name = line;
+                break;
             }
         }
     }
 
     if (!name) return null;
 
-    // Limpieza y validación del nombre
+    // ==========================================
+    // VALIDACIÓN Y LIMPIEZA
+    // ==========================================
     name = name.trim();
-    if (name.length < 1) return null;
+    if (name.length < 1 || name.length > 120) return null;
 
-    // Filtrar palabras del sistema (Lista reducida y específica)
-    // Solo filtramos si es EXACTAMENTE una de estas palabras
-    const skipWords = ['archivados', 'archived', 'difusión', 'broadcast'];
-    if (skipWords.includes(name.toLowerCase())) return null;
+    // Filtrar palabras del sistema
+    const nameLower = name.toLowerCase();
+    if (SYSTEM_SKIP_WORDS.has(nameLower)) return null;
 
-    // Detectar teléfono
-    // Limpiar todo lo que no sea número o +
-    const cleanPhone = name.replace(/[^\d+]/g, '');
-    // Debe tener al menos 7 dígitos
-    if (cleanPhone.length >= 7 && /\d/.test(cleanPhone)) {
-        // Es probable que sea un número
-        phone = name; // Guardamos el formato original
+    // Filtrar patrones de no-contacto
+    for (const pattern of NON_CONTACT_PATTERNS) {
+        if (pattern.test(name)) return null;
     }
 
-    // Último mensaje (todo lo que no es el nombre)
-    // Intentamos limpiar el nombre del texto completo para dejar el mensaje
+    // No debe ser solo números (a menos que sea un teléfono válido)
+    if (/^\d+$/.test(name) && name.length < 7) return null;
+
+    // No debe ser solo caracteres especiales
+    if (/^[^\w\s]+$/.test(name)) return null;
+
+    // ==========================================
+    // DETECCIÓN DE TELÉFONO
+    // ==========================================
+    const cleanPhone = name.replace(/[^\d+]/g, '');
+    if (cleanPhone.length >= 7 && /\d/.test(cleanPhone)) {
+        phone = name;
+    }
+
+    // También buscar teléfono en el texto secundario
+    if (!phone) {
+        const secondaryText = element.querySelector('span[dir="auto"]:nth-child(2),' +
+            'span:nth-child(2), div:nth-child(2) > span');
+        if (secondaryText) {
+            const st = (secondaryText.textContent || '').replace(/[^\d+]/g, '');
+            if (st.length >= 7) {
+                phone = secondaryText.textContent.trim();
+            }
+        }
+    }
+
+    // ==========================================
+    // ÚLTIMO MENSAJE
+    // ==========================================
     let lastMessage = text.replace(name, '').replace(/\n/g, ' ').trim();
-
-    // Limpieza adicional de hora si quedó al principio
     lastMessage = lastMessage.replace(/^\d{1,2}:\d{2}\s*/, '').trim();
-
+    lastMessage = lastMessage.replace(/^[▼▲▶●◉○◎◆◇▪▫]/, '').trim();
     if (lastMessage.length > 100) lastMessage = lastMessage.substring(0, 100) + '...';
 
     // Crear ID único
@@ -407,6 +670,15 @@ function extractContactInfo(element) {
         lastMessage: lastMessage,
         extractedAt: new Date().toISOString()
     };
+}
+
+// Helper: verifica si un texto parece hora o fecha
+function isTimeOrDateText(text) {
+    if (!text) return false;
+    return /^\d{1,2}:\d{2}(\s*[ap]\.?\s*m?\.?)?$/i.test(text.trim()) ||
+        /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(text.trim()) ||
+        /^(ayer|yesterday|hoy|today)$/i.test(text.trim()) ||
+        text.trim().length < 2;
 }
 
 // ========================================
@@ -624,26 +896,40 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
 
         case 'GET_STATUS':
+            const paneSideExists = document.querySelector('#pane-side') !== null;
+            const appExists = document.querySelector('#app') !== null;
+            const listItemsExist = document.querySelectorAll('div[role="listitem"]').length > 0;
+            const rowsExist = document.querySelectorAll('div[role="row"]').length > 0;
             sendResponse({
                 isScanning: isScanning,
                 contactCount: extractedContacts.size,
-                ready: document.querySelector('#pane-side') !== null || document.querySelector('#app') !== null
+                ready: paneSideExists || (appExists && (listItemsExist || rowsExist))
             });
             break;
 
         case 'checkWhatsAppStatus':
             const paneExists = document.querySelector('#pane-side') !== null;
             const appLoaded = document.querySelector('#app') !== null;
+            const hasListItems = document.querySelectorAll('div[role="listitem"]').length > 0;
+            const hasRows = document.querySelectorAll('div[role="row"]').length > 0;
+            const hasSpanTitles = document.querySelectorAll('span[title]').length > 3;
+            const hasChatIndicators = hasListItems || hasRows || hasSpanTitles;
             sendResponse({
-                isLoaded: paneExists || appLoaded,
+                isLoaded: paneExists || (appLoaded && hasChatIndicators),
                 paneExists: paneExists,
-                appLoaded: appLoaded
+                appLoaded: appLoaded,
+                hasChatIndicators: hasChatIndicators
             });
             break;
 
         case 'RUN_DIAGNOSTICS':
             const diagnostics = runDiagnostics();
             sendResponse(diagnostics);
+            break;
+
+        case 'CAPTURE_DOM_SNAPSHOT':
+            const snapshot = captureFullDOMSnapshot();
+            sendResponse(snapshot);
             break;
 
         default:
@@ -658,14 +944,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // FUNCIÓN DE DIAGNÓSTICO
 // ========================================
 function runDiagnostics() {
-    console.log('\n=== 🔍 DIAGNÓSTICO SNATCH EXPORTER ===\n');
+    console.log('\n=== 🔍 DIAGNÓSTICO SNATCH EXPORTER v2.3 ===\n');
 
     const results = {
         timestamp: new Date().toISOString(),
         contentScriptLoaded: true,
         whatsappDetected: false,
         containerFound: false,
-        chatsVisible: 0
+        containerDetails: null,
+        discoveredSelector: null,
+        chatsVisible: 0,
+        domSnapshot: null,
+        errors: []
     };
 
     // 1. WhatsApp detectado?
@@ -673,6 +963,8 @@ function runDiagnostics() {
     const pane = document.querySelector('#pane-side');
     results.whatsappDetected = !!(app || pane);
     console.log(`1. WhatsApp detectado: ${results.whatsappDetected ? '✅' : '❌'}`);
+    if (app) console.log('   - #app: ✅ presente');
+    if (pane) console.log('   - #pane-side: ✅ presente');
 
     // 2. Contenedor encontrado?
     const container = findChatContainer();
@@ -680,29 +972,254 @@ function runDiagnostics() {
     console.log(`2. Contenedor de chats: ${results.containerFound ? '✅' : '❌'}`);
 
     if (container) {
-        console.log(`   - scrollHeight: ${container.scrollHeight}`);
-        console.log(`   - clientHeight: ${container.clientHeight}`);
+        results.containerDetails = {
+            tagName: container.tagName,
+            id: container.id || '(sin id)',
+            className: container.className || '(sin class)',
+            role: container.getAttribute('role') || '(sin role)',
+            testId: container.getAttribute('data-testid') || '(sin data-testid)',
+            ariaLabel: container.getAttribute('aria-label') || '(sin aria-label)',
+            scrollHeight: container.scrollHeight,
+            clientHeight: container.clientHeight,
+            scrollTop: container.scrollTop,
+            childrenCount: container.children.length,
+            isScrollable: container.scrollHeight > container.clientHeight + 30
+        };
+        console.log(`   - Tag: ${results.containerDetails.tagName}`);
+        console.log(`   - ID: ${results.containerDetails.id}`);
+        console.log(`   - Class: ${results.containerDetails.className.substring(0, 80)}`);
+        console.log(`   - Role: ${results.containerDetails.role}`);
+        console.log(`   - data-testid: ${results.containerDetails.testId}`);
+        console.log(`   - scrollHeight: ${results.containerDetails.scrollHeight}`);
+        console.log(`   - clientHeight: ${results.containerDetails.clientHeight}`);
+        console.log(`   - hijos directos: ${results.containerDetails.childrenCount}`);
+        console.log(`   - scrollable: ${results.containerDetails.isScrollable ? '✅' : '❌'}`);
+
+        // Descubrir selector dinámico
+        const discovered = discoverChatRowSelector(container);
+        results.discoveredSelector = discovered;
+        if (discovered) {
+            console.log(`3. Selector dinámico: "${discovered.selector}" (${discovered.total} elem, ${discovered.valid} válidos)`);
+        } else {
+            console.log('3. Selector dinámico: ❌ No se pudo descubrir');
+            results.errors.push('No se pudo descubrir un selector de filas de chat');
+        }
     }
 
-    // 3. Chats visibles?
+    // 4. Elementos encontrados en el DOM global
     const listItems = document.querySelectorAll('div[role="listitem"]').length;
     const rows = document.querySelectorAll('div[role="row"]').length;
     const spanTitles = document.querySelectorAll('span[title]').length;
-    results.chatsVisible = Math.max(listItems, rows);
+    const options = document.querySelectorAll('div[role="option"]').length;
+    const buttons = document.querySelectorAll('div[role="button"]').length;
+    const gridcells = document.querySelectorAll('div[role="gridcell"]').length;
+    results.chatsVisible = Math.max(listItems, rows, options);
 
-    console.log(`3. Elementos encontrados:`);
-    console.log(`   - role="listitem": ${listItems}`);
-    console.log(`   - role="row": ${rows}`);
+    console.log('4. Elementos DOM globales:');
+    console.log(`   - div[role="listitem"]: ${listItems}`);
+    console.log(`   - div[role="row"]: ${rows}`);
+    console.log(`   - div[role="option"]: ${options}`);
+    console.log(`   - div[role="button"]: ${buttons}`);
+    console.log(`   - div[role="gridcell"]: ${gridcells}`);
     console.log(`   - span[title]: ${spanTitles}`);
 
-    // 4. Estado actual
-    console.log(`4. Estado:`);
+    // 5. Snapshot de clases CSS activas (primeros 5 elementos)
+    if (container && container.children.length > 0) {
+        const classSnapshot = [];
+        const maxItems = Math.min(container.children.length, 5);
+        for (let i = 0; i < maxItems; i++) {
+            const child = container.children[i];
+            const classes = Array.from(child.classList).filter(c => c.length > 1 && c.length < 30);
+            const textSample = (child.innerText || '').substring(0, 50);
+            classSnapshot.push({
+                index: i,
+                tag: child.tagName,
+                classes: classes.join(' '),
+                role: child.getAttribute('role') || '',
+                testId: child.getAttribute('data-testid') || '',
+                height: child.offsetHeight,
+                textSample: textSample,
+                hasSpanTitle: !!child.querySelector('span[title]'),
+                hasProfileImg: !!child.querySelector('img[draggable="false"]')
+            });
+        }
+        results.domSnapshot = classSnapshot;
+
+        console.log('5. Snapshot DOM (primeros elementos del contenedor):');
+        classSnapshot.forEach(item => {
+            console.log(`   [${item.index}] <${item.tag}> role="${item.role}" testid="${item.testId}" h=${item.height}px`);
+            console.log(`       classes: ${item.classes || '(ninguna)'}`);
+            console.log(`       texto: "${item.textSample}"`);
+            console.log(`       span[title]: ${item.hasSpanTitle ? '✅' : '❌'}  img: ${item.hasProfileImg ? '✅' : '❌'}`);
+        });
+    }
+
+    // 6. Estado actual
+    console.log('6. Estado:');
     console.log(`   - isScanning: ${isScanning}`);
     console.log(`   - contactos extraídos: ${extractedContacts.size}`);
+    console.log(`   - scanIntervalId: ${scanIntervalId ? 'activo' : 'null'}`);
+
+    // 7. Errores
+    if (results.errors.length > 0) {
+        console.log('7. Errores:');
+        results.errors.forEach((e, i) => console.log(`   ${i + 1}. ${e}`));
+    } else {
+        console.log('7. Sin errores detectados ✅');
+    }
 
     console.log('\n=== FIN DIAGNÓSTICO ===\n');
+    console.log('💡 Para compartir estos resultados, copia todo el contenido de la consola.');
+    console.log('💡 También puedes ejecutar: copy(JSON.stringify(window.snatchExporter.runDiagnostics(), null, 2))');
 
     return results;
+}
+
+// ========================================
+// FUNCIÓN DE SNAPSHOT COMPLETO DEL DOM
+// ========================================
+function captureFullDOMSnapshot() {
+    console.log('📸 Capturando snapshot completo del DOM...');
+
+    const snapshot = {
+        timestamp: new Date().toISOString(),
+        url: window.location.href,
+        title: document.title,
+        // Estructura del app
+        app: null,
+        paneSide: null,
+        containers: [],
+        chatRows: [],
+        // Selectores disponibles
+        availableSelectors: {},
+        // Resumen
+        summary: ''
+    };
+
+    // Analizar #app
+    const app = document.querySelector('#app');
+    if (app) {
+        snapshot.app = {
+            childrenCount: app.children.length,
+            childrenTags: Array.from(app.children).map(c => ({
+                tag: c.tagName,
+                id: c.id || '',
+                className: (c.className || '').substring(0, 100),
+                childrenCount: c.children.length,
+                role: c.getAttribute('role') || ''
+            }))
+        };
+    }
+
+    // Analizar #pane-side
+    const pane = document.querySelector('#pane-side');
+    if (pane) {
+        snapshot.paneSide = {
+            tagName: pane.tagName,
+            className: (pane.className || '').substring(0, 200),
+            childrenCount: pane.children.length,
+            scrollHeight: pane.scrollHeight,
+            clientHeight: pane.clientHeight,
+            childrenTags: Array.from(pane.children).map(c => ({
+                tag: c.tagName,
+                className: (c.className || '').substring(0, 80),
+                role: c.getAttribute('role') || '',
+                testId: c.getAttribute('data-testid') || '',
+                height: c.offsetHeight
+            }))
+        };
+    }
+
+    // Buscar todos los contenedores scrollables con indicadores de chat
+    const allDivs = document.querySelectorAll('div, section, main');
+    allDivs.forEach(div => {
+        if (div.clientHeight > 100 && div.scrollHeight > div.clientHeight + 30) {
+            const chatIndicators = div.querySelectorAll('span[title], div[role="listitem"], div[role="row"], img[draggable="false"]');
+            if (chatIndicators.length > 2) {
+                snapshot.containers.push({
+                    tag: div.tagName,
+                    id: div.id || '',
+                    className: (div.className || '').substring(0, 100),
+                    role: div.getAttribute('role') || '',
+                    testId: div.getAttribute('data-testid') || '',
+                    aria: div.getAttribute('aria-label') || '',
+                    scrollHeight: div.scrollHeight,
+                    clientHeight: div.clientHeight,
+                    childrenCount: div.children.length,
+                    chatIndicatorsCount: chatIndicators.length
+                });
+            }
+        }
+    });
+
+    // Verificar qué selectores están disponibles
+    const selectorTests = {
+        '#pane-side': document.querySelector('#pane-side'),
+        '[data-testid="pane-side"]': document.querySelector('[data-testid="pane-side"]'),
+        '[data-testid="chat-list"]': document.querySelector('[data-testid="chat-list"]'),
+        '[data-testid="chatlist-panel"]': document.querySelector('[data-testid="chatlist-panel"]'),
+        'div[role="listitem"]': document.querySelectorAll('div[role="listitem"]').length,
+        'div[role="row"]': document.querySelectorAll('div[role="row"]').length,
+        'div[role="option"]': document.querySelectorAll('div[role="option"]').length,
+        'div[role="button"]': document.querySelectorAll('div[role="button"]').length,
+        'div[role="gridcell"]': document.querySelectorAll('div[role="gridcell"]').length,
+        'span[title]': document.querySelectorAll('span[title]').length,
+        'img[draggable="false"]': document.querySelectorAll('img[draggable="false"]').length,
+        '[data-testid*="cell"]': document.querySelectorAll('[data-testid*="cell"]').length,
+        '[data-testid*="chat-list-item"]': document.querySelectorAll('[data-testid*="chat-list-item"]').length,
+        '[data-testid*="list-item"]': document.querySelectorAll('[data-testid*="list-item"]').length,
+        // Clases legacy
+        'div._ak8l': document.querySelectorAll('div._ak8l').length,
+        'div._ak8o': document.querySelectorAll('div._ak8o').length,
+        'div._ak8k': document.querySelectorAll('div._ak8k').length,
+        'div._ak72': document.querySelectorAll('div._ak72').length,
+        'div._ak7l': document.querySelectorAll('div._ak7l').length,
+        // Nuevas clases 2025-2026
+        'div.x1iyjqo2': document.querySelectorAll('div.x1iyjqo2').length,
+        'div.x1n2onr6': document.querySelectorAll('div.x1n2onr6').length,
+        'div.x10l6tqk': document.querySelectorAll('div.x10l6tqk').length,
+        'div.xh8yej3': document.querySelectorAll('div.xh8yej3').length,
+        'div[class*="ListItem"]': document.querySelectorAll('div[class*="ListItem"]').length,
+        'div[class*="list-item"]': document.querySelectorAll('div[class*="list-item"]').length,
+        'div[class*="chat-item"]': document.querySelectorAll('div[class*="chat-item"]').length,
+    };
+
+    snapshot.availableSelectors = {};
+    for (const [key, value] of Object.entries(selectorTests)) {
+        if (value instanceof Element) {
+            snapshot.availableSelectors[key] = { found: true, tag: value.tagName };
+        } else if (typeof value === 'number') {
+            snapshot.availableSelectors[key] = { count: value };
+        } else {
+            snapshot.availableSelectors[key] = { found: false };
+        }
+    }
+
+    // Generar resumen
+    const hasPaneSide = !!snapshot.availableSelectors['#pane-side']?.found;
+    const hasListItems = (snapshot.availableSelectors['div[role="listitem"]']?.count || 0) > 0;
+    const hasRows = (snapshot.availableSelectors['div[role="row"]']?.count || 0) > 0;
+    const hasSpanTitles = (snapshot.availableSelectors['span[title]']?.count || 0) > 3;
+    const hasLegacy = (snapshot.availableSelectors['div._ak8l']?.count || 0) > 0;
+
+    const parts = [];
+    if (hasPaneSide) parts.push('#pane-side presente');
+    if (hasListItems) parts.push(`role=listitem (${snapshot.availableSelectors['div[role="listitem"]'].count})`);
+    if (hasRows) parts.push(`role=row (${snapshot.availableSelectors['div[role="row"]'].count})`);
+    if (hasSpanTitles) parts.push(`span[title] (${snapshot.availableSelectors['span[title]'].count})`);
+    if (hasLegacy) parts.push(`clases legacy (_ak8l) presentes`);
+    if (parts.length === 0) parts.push('NINGÚN selector conocido funciona');
+
+    snapshot.summary = parts.join(' | ');
+
+    console.log('📸 Snapshot capturado:');
+    console.log(`   Resumen: ${snapshot.summary}`);
+    console.log(`   Contenedores con chats: ${snapshot.containers.length}`);
+    if (snapshot.paneSide) {
+        console.log(`   #pane-side: ${snapshot.paneSide.childrenCount} hijos, scroll=${snapshot.paneSide.scrollHeight}px`);
+    }
+
+    return snapshot;
 }
 
 // ========================================
@@ -739,10 +1256,21 @@ window.snatchExporter = {
     stopExtraction,
     clearData,
     runDiagnostics,
-    findChatContainer,
+    captureFullDOMSnapshot,
+    discoverChatRowSelector,
+    discoverContainer: findChatContainer,
     getContacts: () => Array.from(extractedContacts.values()),
-    getStatus: () => ({ isScanning, contactCount: extractedContacts.size })
+    getStatus: () => ({ isScanning, contactCount: extractedContacts.size }),
+    getDetailedStatus: () => ({
+        isScanning,
+        contactCount: extractedContacts.size,
+        scanIntervalId: scanIntervalId ? 'active' : null,
+        extractedContacts: Array.from(extractedContacts.values()).slice(0, 5)
+    })
 };
 
-console.log('✅ Snatch Exporter listo. Usa window.snatchExporter para debug.');
-console.log('   Ejecuta runDiagnostics() para ver el estado.');
+console.log('✅ Snatch Exporter v2.3 listo. Comandos disponibles:');
+console.log('   window.snatchExporter.runDiagnostics()          - Diagnóstico completo');
+console.log('   window.snatchExporter.captureFullDOMSnapshot()  - Snapshot del DOM');
+console.log('   window.snatchExporter.discoverChatRowSelector() - Descubrir selector dinámico');
+console.log('   window.snatchExporter.getDetailedStatus()       - Estado detallado');

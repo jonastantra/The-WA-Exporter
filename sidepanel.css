@@ -1086,3 +1086,69 @@ body {
 [dir="rtl"] .status-item.completed {
     border-right-color: var(--primary-green);
 }
+
+/* ========================================
+   DIAGNOSTIC RESULTS (v2.3)
+   ======================================== */
+.diagnostic-results {
+    animation: fadeIn 0.3s ease;
+}
+
+.diag-card {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-primary);
+}
+
+.diag-card h4 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.diag-card p {
+    margin: 4px 0;
+}
+
+.diag-card hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 8px 0;
+}
+
+.diag-card strong {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.diag-card small {
+    font-size: 11px;
+    color: var(--text-muted);
+    word-break: break-all;
+}
+
+.diag-card code {
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    color: var(--accent-blue);
+    word-break: break-all;
+}
+
+/* Mini spinner for inline loading */
+.mini-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--border-color);
+    border-top-color: var(--primary-green);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+}
