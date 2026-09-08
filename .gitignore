@@ -3,3 +3,14 @@ dist/
 node_modules/
 .DS_Store
 Thumbs.db
+
+# excluido al respaldar antes de formatear C:
+.next/
+build/
+.venv/
+venv/
+__pycache__/
+.env
+.env.local
+.expo/
+.turbo/
